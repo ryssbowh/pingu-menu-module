@@ -1,0 +1,30 @@
+{
+    "name": "pingu/menu-module",
+    "description": "Menu module for Pingu",
+    "type" : "asgard-module",
+    "authors": [
+        {
+            "name": "Boris Blondin",
+            "email": "blondin.boris@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Pingu\\Menu\\Providers\\MenuServiceProvider"
+            ],
+            "aliases": {
+                
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Pingu\\Menu\\": ""
+        }
+    },
+    "require":{
+        "pingu/core-module": "1.1.2",
+        "pingu/forms-module": "1.1.2"
+    }
+}
