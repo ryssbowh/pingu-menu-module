@@ -24,7 +24,7 @@
         }
     },
     "require":{
-        "pingu/core-module": "1.1.2",
-        "pingu/forms-module": "1.1.2"
+        "pingu/core-module": "1.1.*",
+        "pingu/forms-module": "1.1.*"
     }
 }
