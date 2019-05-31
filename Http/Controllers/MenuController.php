@@ -26,10 +26,10 @@ class MenuController extends BaseController implements ModelControllerContract, 
     	return view('menu::edit-items')->with([
     		'menu' => $menu, 
     		'items' => $menu->getRootItems(),
-            'addItemUri' => MenuItem::transformApiUri('create', [$menu->id], true),
-            'deleteItemUri' => MenuItem::getApiUri('delete', true),
-            'editItemUri' => MenuItem::getApiUri('edit', true),
-            'patchItemsUri' => MenuItem::getApiUri('patch', true)
+            'addItemUri' => MenuItem::transformAjaxUri('create', [$menu->id], true),
+            'deleteItemUri' => MenuItem::getAjaxUri('delete', true),
+            'editItemUri' => MenuItem::getAjaxUri('edit', true),
+            'patchItemsUri' => MenuItem::getAjaxUri('patch', true)
     	]);
     }
 

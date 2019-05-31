@@ -19,10 +19,12 @@ class MenuDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        $perm = Permission::findOrCreate(['name' => 'manage menus', 'section' => 'Menu']);
+        $perm = Permission::findOrCreate(['name' => 'view menus', 'section' => 'Menu']);
         Permission::findOrCreate(['name' => 'add menus', 'section' => 'Menu']);
         Permission::findOrCreate(['name' => 'edit menus', 'section' => 'Menu']);
         Permission::findOrCreate(['name' => 'delete menus', 'section' => 'Menu']);
+        Permission::findOrCreate(['name' => 'edit menu items', 'section' => 'Menu']);
+        Permission::findOrCreate(['name' => 'create menu items', 'section' => 'Menu']);
         Permission::findOrCreate(['name' => 'delete menu items', 'section' => 'Menu']);
 
         $menu = Menu::findByName('admin-menu');

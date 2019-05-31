@@ -15,7 +15,7 @@ use Pingu\Menu\Entities\Menu;
 
 Route::get(Menu::getAdminUri('index'), ['uses' => 'MenuController@index'])
 	->name('menu.admin.menus')
-	->middleware('can:manage menus');
+	->middleware('can:view menus');
 
 Route::get(Menu::getAdminUri('edit'), ['uses' => 'MenuController@edit'])
 	->middleware('can:edit menus');

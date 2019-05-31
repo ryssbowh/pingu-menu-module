@@ -3,10 +3,10 @@
 namespace Pingu\Menu\Entities;
 
 use Illuminate\Validation\Validator;
-use Pingu\Core\Contracts\APIableModel as APIableModelContract;
+use Pingu\Core\Contracts\AjaxableModel as AjaxableModelContract;
 use Pingu\Core\Contracts\HasChildren as HasChildrenContract;
 use Pingu\Core\Entities\BaseModel;
-use Pingu\Core\Traits\APIableModel;
+use Pingu\Core\Traits\AjaxableModel;
 use Pingu\Core\Traits\HasChildren;
 use Pingu\Forms\Contracts\FormableModel as FormableModelContract;
 use Pingu\Forms\Fields\Boolean;
@@ -21,9 +21,9 @@ use Pingu\Menu\Entities\MenuItem;
 use Pingu\Permissions\Entities\Permission;
 use Route;
 
-class MenuItem extends BaseModel implements HasChildrenContract, FormableModelContract, APIableModelContract
+class MenuItem extends BaseModel implements HasChildrenContract, FormableModelContract, AjaxableModelContract
 {
-    use HasChildren, FormableModel, APIableModel;
+    use HasChildren, FormableModel, AjaxableModel;
 
     protected $attributes = [
         'url' => ''
@@ -64,7 +64,8 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableModelCo
             'type' => Model::class,
             'model' => Permission::class,
             'textField' => 'name',
-            'noValueLabel' => 'No permission'
+            'noValueLabel' => 'No permission',
+            'label' => 'Viewing permission'
         ]
     ];
 
@@ -216,32 +217,32 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableModelCo
         return parent::save();
     }
 
-    public static function apiCreateUri()
+    public static function ajaxCreateUri()
     {
-        return static::apiStoreUri().'/create';
+        return static::ajaxStoreUri().'/create';
     }
 
-    public static function apiStoreUri()
+    public static function ajaxStoreUri()
     {
         return Menu::routeSlug().'/{'.Menu::routeSlug().'}/'.static::routeSlugs();
     }
 
-    public static function apiDeleteUri()
+    public static function ajaxDeleteUri()
     {
         return Menu::routeSlugs().'/'.static::routeSlugs().'/{'.static::routeSlug().'}';
     }
 
-    public static function apiEditUri()
+    public static function ajaxEditUri()
     {
-        return static::apiDeleteUri().'/edit';
+        return static::ajaxDeleteUri().'/edit';
     }
 
-    public static function apiUpdateUri()
+    public static function ajaxUpdateUri()
     {
-        return static::apiDeleteUri();
+        return static::ajaxDeleteUri();
     }
 
-    public static function apiPatchUri()
+    public static function ajaxPatchUri()
     {
         return Menu::routeSlugs().'/'.static::routeSlugs();
     }

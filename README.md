@@ -4,6 +4,10 @@
 - [ ] make the nav show active menu item
 - [ ] add target attribute
 
+## v1.1.1
+- renamed api in ajax
+- added ajax routes
+
 ## v1.0.0
 - added permission
 - added pingu-menu as js module

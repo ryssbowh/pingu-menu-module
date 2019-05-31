@@ -3,9 +3,9 @@
 namespace Pingu\Menu\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Pingu\Core\Contracts\ApiModelController as ApiModelControllerContract;
+use Pingu\Core\Contracts\AjaxModelController as AjaxModelControllerContract;
 use Pingu\Core\Http\Controllers\BaseController;
-use Pingu\Core\Traits\ApiModelController;
+use Pingu\Core\Traits\AjaxModelController;
 use Pingu\Forms\Contracts\FormableModel;
 use Pingu\Forms\Fields\Text;
 use Pingu\Forms\Form;
@@ -14,9 +14,9 @@ use Pingu\Forms\Renderers\Hidden;
 use Pingu\Menu\Entities\Menu;
 use Pingu\Menu\Entities\MenuItem;
 
-class ApiItemController extends BaseController implements ApiModelControllerContract
+class AjaxItemController extends BaseController implements AjaxModelControllerContract
 {
-    use ApiModelController;
+    use AjaxModelController;
 
     /**
      * @inheritDoc
@@ -34,7 +34,7 @@ class ApiItemController extends BaseController implements ApiModelControllerCont
     protected function getStoreUri(Request $request): string
 	{
 		$menu = $request->route()->parameters()['menu'];
-		return MenuItem::transformApiUri('store', [$menu->id], true);
+		return MenuItem::transformAjaxUri('store', [$menu->id], true);
 	}
 
 	/**

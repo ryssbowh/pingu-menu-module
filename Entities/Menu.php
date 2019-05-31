@@ -7,7 +7,7 @@ use Pingu\Core\Contracts\AdminableModel as AdminableModelContract;
 use Pingu\Core\Contracts\HasContextualLinks;
 use Pingu\Core\Contracts\HasItems;
 use Pingu\Core\Entities\BaseModel;
-use Pingu\Core\Traits\APIableModel;
+use Pingu\Core\Traits\AjaxableModel;
 use Pingu\Core\Traits\AdminableModel;
 use Pingu\Forms\Fields\ManyModel;
 use Pingu\Forms\Fields\Text;
@@ -19,7 +19,7 @@ use Pingu\Jsgrid\Traits\JsGridableModel;
 
 class Menu extends BaseModel implements JsGridableModelContract, HasItems, HasContextualLinks, AdminableModelContract
 {
-	use FormableModel, JsGridableModel, APIableModel, AdminableModel;
+	use FormableModel, JsGridableModel, AjaxableModel, AdminableModel;
 
     protected $fillable = ['name', 'machineName'];
 
