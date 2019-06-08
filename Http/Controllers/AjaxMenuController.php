@@ -3,14 +3,14 @@
 namespace Pingu\Menu\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Pingu\Core\Contracts\AjaxModelController as AjaxModelControllerContract;
+use Pingu\Core\Contracts\Controllers\HandlesAjaxModelContract;
 use Pingu\Core\Http\Controllers\BaseController;
-use Pingu\Core\Traits\AjaxModelController;
+use Pingu\Core\Traits\Controllers\HandlesAjaxModel;
 use Pingu\Menu\Entities\Menu;
 
-class AjaxMenuController extends BaseController implements AjaxModelControllerContract
+class AjaxMenuController extends BaseController implements HandlesAjaxModelContract
 {
-    use AjaxModelController;
+    use HandlesAjaxModel;
     
     /**
      * @inheritDoc

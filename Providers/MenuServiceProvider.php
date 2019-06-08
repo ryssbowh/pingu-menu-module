@@ -2,9 +2,13 @@
 
 namespace Pingu\Menu\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Factory;
 use Asset;
+use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Routing\Router;
+use Illuminate\Support\ServiceProvider;
+use Pingu\Menu\Http\Middleware\DeletableMenu;
+use Pingu\Menu\Http\Middleware\DeletableMenuItem;
+use Pingu\Menu\Menus;
 
 class MenuServiceProvider extends ServiceProvider
 {
@@ -15,13 +19,16 @@ class MenuServiceProvider extends ServiceProvider
      */
     protected $defer = false;
 
+    protected $modelFolder = 'Entities';
+
     /**
      * Boot the application events.
      *
      * @return void
      */
-    public function boot()
+    public function boot(Router $router)
     {
+        $this->registerModelSlugs();
         $this->registerTranslations();
         $this->registerConfig();
         $this->loadViewsFrom(__DIR__ . '/../Resources/views', 'menu');
@@ -29,6 +36,9 @@ class MenuServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
         Asset::container('modules')->add('menu-js', 'modules/Menu/js/Menu.js');
+
+        $router->aliasMiddleware('deletableMenuItem', DeletableMenuItem::class);
+        $router->aliasMiddleware('deletableMenu', DeletableMenu::class);
     }
 
     /**
@@ -38,7 +48,17 @@ class MenuServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->singleton('menu.menus', Menus::class);
         $this->app->register(RouteServiceProvider::class);
+        $this->app->register(EventServiceProvider::class);
+    }
+
+    /**
+     * Registers all the slugs for this module's models
+     */
+    public function registerModelSlugs()
+    {
+        \ModelRoutes::registerSlugsFromPath(realpath(__DIR__.'/../'.$this->modelFolder));
     }
 
     /**

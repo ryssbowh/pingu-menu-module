@@ -3,56 +3,106 @@
 namespace Pingu\Menu\Entities;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Pingu\Core\Contracts\AdminableModel as AdminableModelContract;
-use Pingu\Core\Contracts\HasContextualLinks;
-use Pingu\Core\Contracts\HasItems;
+use Pingu\Core\Contracts\Models\HasAdminRoutesContract;
+use Pingu\Core\Contracts\Models\HasContextualLinksContract;
+use Pingu\Core\Contracts\Models\HasItemsContract;
 use Pingu\Core\Entities\BaseModel;
-use Pingu\Core\Traits\AjaxableModel;
-use Pingu\Core\Traits\AdminableModel;
+use Pingu\Core\Traits\Models\HasAdminRoutes;
+use Pingu\Core\Traits\Models\HasAjaxRoutes;
+use Pingu\Core\Traits\Models\HasRouteSlug;
 use Pingu\Forms\Fields\ManyModel;
 use Pingu\Forms\Fields\Text;
 use Pingu\Forms\Renderers\ModelTree;
-use Pingu\Forms\Traits\FormableModel;
-use Pingu\Jsgrid\Contracts\JsGridableModel as JsGridableModelContract;
+use Pingu\Forms\Traits\Formable;
+use Pingu\Jsgrid\Contracts\Models\JsGridableContract;
 use Pingu\Jsgrid\Fields\Text as JsGridText;
-use Pingu\Jsgrid\Traits\JsGridableModel;
+use Pingu\Jsgrid\Traits\Models\JsGridable;
+use Pingu\Menu\Events\MenuCacheChanged;
 
-class Menu extends BaseModel implements JsGridableModelContract, HasItems, HasContextualLinks, AdminableModelContract
+class Menu extends BaseModel implements JsGridableContract, HasContextualLinksContract, HasAdminRoutesContract, HasItemsContract
 {
-	use FormableModel, JsGridableModel, AjaxableModel, AdminableModel;
+    use JsGridable, Formable, HasAjaxRoutes, HasAdminRoutes, HasRouteSlug;
+
+    protected $dispatchesEvents = [
+        'saved' => MenuCacheChanged::class,
+        'deleted' => MenuCacheChanged::class
+    ];
 
     protected $fillable = ['name', 'machineName'];
 
-    public static $fieldDefinitions = [
-		'name' => [
-			'type' => Text::class
-		],
-		'machineName' => [
-			'type' => Text::class,
-			'label' => 'Machine Name'
-		],
-        'items' => [
-            'type' => ManyModel::class,
-            'model' => MenuItem::class,
-            'textField' => 'name',
-            'renderer' => ModelTree::class
-        ]
-	];
-
-    public static $validationRules = [
-        'name' => 'required',
-        'machineName' => 'required|unique:menus,machineName,{machineName}'
+    protected $casts = [
+        'deletable' => 'boolean'
     ];
 
-    public static $validationMessages = [
-        'name.required' => 'Name is required',
-        'machineName.required' => 'Machine Name is required',
-        'machineName.unique' => 'Machine name already exists'
-    ];
+    /**
+     * @inheritDoc
+     */
+    public function formAddFields()
+    {
+        return ['name', 'machineName'];
+    }
 
-    public static $addFields = ['name', 'machineName'];
+    /**
+     * @inheritDoc
+     */
+    public function formEditFields()
+    {
+        return ['name'];
+    }
 
-    public static $editFields = ['name'];
+    /**
+     * @inheritDoc
+     */
+    public function fieldDefinitions()
+    {
+        return [
+            'name' => [
+                'type' => Text::class
+            ],
+            'machineName' => [
+                'type' => Text::class,
+                'label' => 'Machine Name',
+                'rendererAttributes' => [
+                    'class' => 'js-dashify',
+                    'data-dashifyfrom' => 'name'
+                ]
+            ],
+            'items' => [
+                'type' => ManyModel::class,
+                'model' => MenuItem::class,
+                'textField' => 'name',
+                'renderer' => ModelTree::class
+            ]
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function validationRules()
+    {
+        return [
+            'name' => 'required',
+            'machineName' => 'required|unique:menus,machineName'
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function validationMessages()
+    {
+        return [
+            'name.required' => 'Name is required',
+            'machineName.required' => 'Machine Name is required',
+            'machineName.unique' => 'Machine name already exists'
+        ];
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'machineName';
+    }
 
     /**
      * A menu can have several items
@@ -77,39 +127,55 @@ class Menu extends BaseModel implements JsGridableModelContract, HasItems, HasCo
         return [
             'edit' => [
                 'title' => 'Edit',
-                'url' => $this::transformAdminUri('edit', [$this->id], true)
+                'url' => $this::transformAdminUri('edit', [$this], true)
             ],
             'items' => [
                 'title' => 'Items',
-                'url' => '/admin/'.$this::routeSlug().'/'.$this->id.'/items'
+                'url' => $this::transformAdminUri('editItems', [$this], true)
             ]
         ];
     }
 
+    /**
+     * Get the direct children of this menu, uses Menus facade for better caching
+     * @return Collection
+     */
     public function getRootItems()
     {
-        return $this->items->filter(function($item, $key){
-            return is_null($item->parent);
-        });
+        return \Menus::menuRootItems($this);
     }
 
+    /**
+     * Get the direct active children of this menu. Uses menus facade for better caching.
+     * @return Collection
+     */
     public function getActiveRootItems()
     {
-        return $this->items->filter(function($item, $key){
-            return (is_null($item->parent) and $item->active);
-        });
+        return \Menus::menuActiveRootItems($this);
     }
 
+    /**
+     * Finds a menu by its name
+     * @param  string $machineName
+     * @return Menu
+     */
     public static function findByName(string $machineName)
     {
-        return static::where(['machineName' => $machineName])->first();
+        return \Menus::menuByName($machineName);
     }
 
+    /**
+     * Returns the next weight
+     * @return integer
+     */
     public function getRootNextWeight()
     {
-        return $this->items()->where(['parent_id' => null])->orderBy('weight', 'desc')->first()->weight + 1;
+        return \Menus::menuRootNextWeight($this);
     }
 
+    /**
+     * @inheritDoc
+     */
     public static function adminEditItemsUri()
     {
         return static::routeSlug().'/{'.static::routeSlug().'}/items';

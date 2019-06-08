@@ -4,11 +4,13 @@
     "description": "",
     "keywords": [],
     "active": 1,
-    "order": 10,
+    "order": 3,
     "providers": [
         "Pingu\\Menu\\Providers\\MenuServiceProvider"
     ],
-    "aliases": {},
+    "aliases": {
+        "Menus": "Pingu\\Menu\\Facades\\Menus"
+    },
     "files": [],
     "requires": []
 }

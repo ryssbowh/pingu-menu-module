@@ -3,10 +3,10 @@
 namespace Pingu\Menu\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Pingu\Core\Contracts\AjaxModelController as AjaxModelControllerContract;
+use Pingu\Core\Contracts\Controllers\HandlesAjaxModelContract;
+use Pingu\Core\Entities\BaseModel;
 use Pingu\Core\Http\Controllers\BaseController;
-use Pingu\Core\Traits\AjaxModelController;
-use Pingu\Forms\Contracts\FormableModel;
+use Pingu\Core\Traits\Controllers\HandlesAjaxModel;
 use Pingu\Forms\Fields\Text;
 use Pingu\Forms\Form;
 use Pingu\Forms\FormModel;
@@ -14,9 +14,9 @@ use Pingu\Forms\Renderers\Hidden;
 use Pingu\Menu\Entities\Menu;
 use Pingu\Menu\Entities\MenuItem;
 
-class AjaxItemController extends BaseController implements AjaxModelControllerContract
+class AjaxItemController extends BaseController implements HandlesAjaxModelContract
 {
-    use AjaxModelController;
+    use HandlesAjaxModel;
 
     /**
      * @inheritDoc
@@ -34,7 +34,7 @@ class AjaxItemController extends BaseController implements AjaxModelControllerCo
     protected function getStoreUri(Request $request): string
 	{
 		$menu = $request->route()->parameters()['menu'];
-		return MenuItem::transformAjaxUri('store', [$menu->id], true);
+		return MenuItem::transformAjaxUri('store', [$menu], true);
 	}
 
 	/**
@@ -80,6 +80,6 @@ class AjaxItemController extends BaseController implements AjaxModelControllerCo
 				$this->saveItems($data['children'], $data['id']);
 			}
 		}
+		\Menus::forgetItemsCache();
 	}
-
 }

@@ -18,6 +18,7 @@ use Pingu\Menu\Entities\MenuItem;
 Route::get(Menu::getAjaxUri('index'), ['uses' => 'AjaxMenuController@index'])
 	->middleware('can:view menus');
 Route::delete(Menu::getAjaxUri('delete'), ['uses' => 'AjaxMenuController@destroy'])
+	->middleware('deletableMenu')
 	->middleware('can:delete menus');
 Route::put(Menu::getAjaxUri('update'), ['uses' => 'AjaxMenuController@update'])
 	->middleware('can:edit menus');
@@ -27,6 +28,7 @@ Route::get(MenuItem::getAjaxUri('create'), ['uses' => 'AjaxItemController@create
 Route::post(MenuItem::getAjaxUri('store'), ['uses' => 'AjaxItemController@store'])
 	->middleware('can:create menu items');
 Route::delete(MenuItem::getAjaxUri('delete'), ['uses' => 'AjaxItemController@destroy'])
+	->middleware('deletableMenuItem')
 	->middleware('can:delete menu items');
 Route::get(MenuItem::getAjaxUri('edit'), ['uses' => 'AjaxItemController@edit'])
 	->middleware('can:edit menu items');

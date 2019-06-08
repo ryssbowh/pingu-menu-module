@@ -2,22 +2,23 @@
 
 namespace Pingu\Menu\Http\Controllers;
 
+use Auth;
 use ContextualLinks;
 use Illuminate\Http\Request;
-use Pingu\Core\Contracts\ModelController as ModelControllerContract;
+use Pingu\Core\Contracts\Controllers\HandlesModelContract;
+use Pingu\Core\Entities\BaseModel;
 use Pingu\Core\Http\Controllers\BaseController;
-use Pingu\Core\Traits\ModelController;
+use Pingu\Core\Traits\Controllers\HandlesModel;
 use Pingu\Forms\FormModel;
 use Pingu\Forms\Renderers\Hidden;
-use Pingu\Jsgrid\Contracts\JsGridController as JsGridControllerContract;
-use Pingu\Jsgrid\Traits\JsGridController;
+use Pingu\Jsgrid\Contracts\Controllers\JsGridContract;
+use Pingu\Jsgrid\Traits\Controllers\JsGrid;
 use Pingu\Menu\Entities\Menu;
 use Pingu\Menu\Entities\MenuItem;
-use Auth;
 
-class MenuController extends BaseController implements ModelControllerContract, JsGridControllerContract
+class MenuController extends BaseController implements HandlesModelContract, JsGridContract
 {
-    use ModelController, JsGridController;
+    use HandlesModel, JsGrid;
 
     public function editItems(Request $request, Menu $menu)
     {
@@ -26,11 +27,20 @@ class MenuController extends BaseController implements ModelControllerContract, 
     	return view('menu::edit-items')->with([
     		'menu' => $menu, 
     		'items' => $menu->getRootItems(),
-            'addItemUri' => MenuItem::transformAjaxUri('create', [$menu->id], true),
+            'addItemUri' => MenuItem::transformAjaxUri('create', [$menu], true),
             'deleteItemUri' => MenuItem::getAjaxUri('delete', true),
             'editItemUri' => MenuItem::getAjaxUri('edit', true),
             'patchItemsUri' => MenuItem::getAjaxUri('patch', true)
     	]);
+    }
+
+    /**
+     * @inheritDoc
+     * @param  BaseModel $menu
+     */
+    public function onSuccessfullStore(BaseModel $menu)
+    {
+        return redirect()->route('menu.admin.menus');
     }
 
     /**
@@ -77,4 +87,5 @@ class MenuController extends BaseController implements ModelControllerContract, 
         
         return view('pages.listModel-jsGrid', $options);
     }
+
 }
