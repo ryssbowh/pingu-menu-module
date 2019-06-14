@@ -10,14 +10,13 @@ use Pingu\Core\Entities\BaseModel;
 use Pingu\Core\Traits\Models\HasAjaxRoutes;
 use Pingu\Core\Traits\Models\HasChildren;
 use Pingu\Core\Traits\Models\HasRouteSlug;
-use Pingu\Forms\Contracts\FormableContract;
-use Pingu\Forms\Fields\Boolean;
-use Pingu\Forms\Fields\Model;
-use Pingu\Forms\Fields\Text;
-use Pingu\Forms\Fields\Url;
-use Pingu\Forms\FormModel;
+use Pingu\Forms\Contracts\Models\FormableContract;
+use Pingu\Forms\Fields\Model\Boolean;
+use Pingu\Forms\Fields\Model\Model;
+use Pingu\Forms\Fields\Model\Text;
+use Pingu\Forms\Fields\Model\Url;
 use Pingu\Forms\Renderers\Hidden;
-use Pingu\Forms\Traits\Formable;
+use Pingu\Forms\Traits\Models\Formable;
 use Pingu\Menu\Entities\Menu;
 use Pingu\Menu\Entities\MenuItem;
 use Pingu\Menu\Events\MenuItemCacheChanged;
@@ -86,7 +85,8 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
                 'type' => Model::class,
                 'model' => Menu::class,
                 'textField' => 'name',
-                'renderer' => Hidden::class
+                'renderer' => Hidden::class,
+                'default' => $this->menu
             ],
             'permission' => [
                 'type' => Model::class,
@@ -110,7 +110,8 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
             'url' => 'sometimes|valid_url',
             'menu' => 'required|exists:menus,id',
             'permission' => 'nullable|exists:permissions,id',
-            'weight' => 'nullable'
+            'weight' => 'nullable',
+            'class' => 'string'
         ];
     }
 

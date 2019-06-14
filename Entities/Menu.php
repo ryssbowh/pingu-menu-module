@@ -10,10 +10,9 @@ use Pingu\Core\Entities\BaseModel;
 use Pingu\Core\Traits\Models\HasAdminRoutes;
 use Pingu\Core\Traits\Models\HasAjaxRoutes;
 use Pingu\Core\Traits\Models\HasRouteSlug;
-use Pingu\Forms\Fields\ManyModel;
-use Pingu\Forms\Fields\Text;
-use Pingu\Forms\Renderers\ModelTree;
-use Pingu\Forms\Traits\Formable;
+use Pingu\Forms\Support\Fields\TextInput;
+use Pingu\Forms\Support\Types\Text;
+use Pingu\Forms\Traits\Models\Formable;
 use Pingu\Jsgrid\Contracts\Models\JsGridableContract;
 use Pingu\Jsgrid\Fields\Text as JsGridText;
 use Pingu\Jsgrid\Traits\Models\JsGridable;
@@ -57,22 +56,34 @@ class Menu extends BaseModel implements JsGridableContract, HasContextualLinksCo
     {
         return [
             'name' => [
-                'type' => Text::class
-            ],
-            'machineName' => [
-                'type' => Text::class,
-                'label' => 'Machine Name',
-                'rendererAttributes' => [
-                    'class' => 'js-dashify',
-                    'data-dashifyfrom' => 'name'
+                'field' => TextInput::class,
+                'options' => [
+                    'label' => 'Name',
+                    'type' => Text::class
+                ],
+                'attributes' => [
+                    'required' => true
                 ]
             ],
-            'items' => [
-                'type' => ManyModel::class,
-                'model' => MenuItem::class,
-                'textField' => 'name',
-                'renderer' => ModelTree::class
-            ]
+            'machineName' => [
+                'field' => TextInput::class,
+                'options' => [
+                    'label' => 'Machine Name',
+                    'type' => Text::class
+                ],
+                'attributes' => [
+                    'class' => 'js-dashify',
+                    'data-dashifyfrom' => 'name',
+                    'required' => true
+                ]
+            ],
+            // 'items' => [
+            //     'type' => MenuTree::class,
+            //     'options' => [
+            //         'model' => MenuItem::class
+            //         'textField' => 'name'
+            //     ]
+            // ]
         ];
     }
 
@@ -113,7 +124,7 @@ class Menu extends BaseModel implements JsGridableContract, HasContextualLinksCo
         return $this->hasMany(MenuItem::class)->orderBy('weight');
     }
 
-    public static function jsGridFields()
+    public function jsGridFields()
     {
     	return [
     		'name' => [

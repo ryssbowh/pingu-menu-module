@@ -7,10 +7,7 @@ use Pingu\Core\Contracts\Controllers\HandlesAjaxModelContract;
 use Pingu\Core\Entities\BaseModel;
 use Pingu\Core\Http\Controllers\BaseController;
 use Pingu\Core\Traits\Controllers\HandlesAjaxModel;
-use Pingu\Forms\Fields\Text;
-use Pingu\Forms\Form;
-use Pingu\Forms\FormModel;
-use Pingu\Forms\Renderers\Hidden;
+use Pingu\Forms\Contracts\FormContract;
 use Pingu\Menu\Entities\Menu;
 use Pingu\Menu\Entities\MenuItem;
 
@@ -42,7 +39,7 @@ class AjaxItemController extends BaseController implements HandlesAjaxModelContr
 	 * @param  Request $request
 	 * @param  Form    $form
 	 */
-    public function afterStoreFormCreated(Request $request, Form $form)
+    public function afterStoreFormCreated(Request $request, FormContract $form)
 	{
 		$menu = $request->route()->parameter('menu');
 		$form->setFieldValue('menu', $menu);
