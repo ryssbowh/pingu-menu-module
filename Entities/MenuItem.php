@@ -11,11 +11,9 @@ use Pingu\Core\Traits\Models\HasAjaxRoutes;
 use Pingu\Core\Traits\Models\HasChildren;
 use Pingu\Core\Traits\Models\HasRouteSlug;
 use Pingu\Forms\Contracts\Models\FormableContract;
-use Pingu\Forms\Fields\Model\Boolean;
-use Pingu\Forms\Fields\Model\Model;
-use Pingu\Forms\Fields\Model\Text;
-use Pingu\Forms\Fields\Model\Url;
-use Pingu\Forms\Renderers\Hidden;
+use Pingu\Forms\Support\Fields\Checkbox;
+use Pingu\Forms\Support\Fields\ModelSelect;
+use Pingu\Forms\Support\Fields\TextInput;
 use Pingu\Forms\Traits\Models\Formable;
 use Pingu\Menu\Entities\Menu;
 use Pingu\Menu\Entities\MenuItem;
@@ -70,30 +68,33 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
     {
         return [
             'name' => [
-                'type' => Text::class
+                'field' => TextInput::class
             ],
             'class' => [
-                'type' => Text::class
+                'field' => TextInput::class
             ],
             'active' => [
-                'type' => Boolean::class
+                'field' => Checkbox::class
             ],
             'url' => [
-                'type' => Url::class
+                'field' => TextInput::class
             ],
             'menu' => [
-                'type' => Model::class,
-                'model' => Menu::class,
-                'textField' => 'name',
-                'renderer' => Hidden::class,
-                'default' => $this->menu
+                'field' => ModelSelect::class,
+                'options' => [
+                    'model' => Menu::class,
+                    'textField' => 'name',
+                    'default' => $this->menu
+                ]
             ],
             'permission' => [
-                'type' => Model::class,
-                'model' => Permission::class,
-                'textField' => 'name',
-                'noValueLabel' => 'No permission',
-                'label' => 'Viewing permission'
+                'field' => ModelSelect::class,
+                'options' => [
+                    'model' => Permission::class,
+                    'textField' => 'name',
+                    'noValueLabel' => 'No permission',
+                    'label' => 'Viewing permission'
+                ]
             ]
         ];
     }
