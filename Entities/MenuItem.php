@@ -171,9 +171,8 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
     public function isUserVisible()
     {
         if($this->permission) return true;
-        $user = \Auth::user();
-        if(!$user) return Role::find(2)->hasPermissionTo($this->permission);
-        return $user->hasPermissionTo($this->permission);
+        $model = \Permissions::getPermissionableModel();
+        return $model->hasPermissionTo($this->permission);
     }
 
     /**

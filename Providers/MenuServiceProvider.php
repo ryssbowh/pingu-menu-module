@@ -36,9 +36,6 @@ class MenuServiceProvider extends ModuleServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
         Asset::container('modules')->add('menu-js', 'module-assets/Menu/js/Menu.js');
-
-        $router->aliasMiddleware('deletableMenuItem', DeletableMenuItem::class);
-        $router->aliasMiddleware('deletableMenu', DeletableMenu::class);
     }
 
     /**

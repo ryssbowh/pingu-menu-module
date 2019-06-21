@@ -5,21 +5,16 @@ namespace Pingu\Menu\Http\Controllers;
 use Auth;
 use ContextualLinks;
 use Illuminate\Http\Request;
-use Pingu\Core\Contracts\Controllers\HandlesModelContract;
 use Pingu\Core\Entities\BaseModel;
-use Pingu\Core\Http\Controllers\BaseController;
-use Pingu\Core\Traits\Controllers\HandlesModel;
+use Pingu\Core\Http\Controllers\AdminModelController;
 use Pingu\Forms\FormModel;
 use Pingu\Forms\Renderers\Hidden;
-use Pingu\Jsgrid\Contracts\Controllers\JsGridContract;
 use Pingu\Jsgrid\Traits\Controllers\JsGrid;
 use Pingu\Menu\Entities\Menu;
 use Pingu\Menu\Entities\MenuItem;
 
-class MenuController extends BaseController implements HandlesModelContract, JsGridContract
+class MenuController extends AdminModelController
 {
-    use HandlesModel, JsGrid;
-
     public function editItems(Request $request, Menu $menu)
     {
         ContextualLinks::addModelLinks($menu);
@@ -46,46 +41,8 @@ class MenuController extends BaseController implements HandlesModelContract, JsG
     /**
      * @inheritDoc
      */
-    public function getModel(): string
+    public function getModel()
     {
         return Menu::class;
     }
-
-    /**
-     * @inheritDoc
-     */
-    protected function canClick()
-    {
-        return Auth::user()->can('edit menus');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function canDelete()
-    {
-        return Auth::user()->can('delete menus');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function canEdit()
-    {
-        return $this->canClick();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function index(Request $request)
-    {
-        $options['jsgrid'] = $this->buildJsGridView($request);
-        $options['title'] = str_plural(Menu::friendlyName());
-        $options['canSeeAddLink'] = Auth::user()->can('add menus');
-        $options['addLink'] = '/admin/'.Menu::routeSlugs().'/create';
-        
-        return view('pages.listModel-jsGrid', $options);
-    }
-
 }
