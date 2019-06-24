@@ -13,7 +13,7 @@ use Pingu\Menu\Entities\Menu;
 |
 */
 
-Route::get(Menu::getAdminUri('index'), ['uses' => 'MenuController@index'])
+Route::get(Menu::getAdminUri('index'), ['uses' => 'MenuJsGridController@index'])
 	->name('menu.admin.menus')
 	->middleware('can:view menus');
 

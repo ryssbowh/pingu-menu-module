@@ -10,14 +10,11 @@ use Pingu\Core\Entities\BaseModel;
 use Pingu\Core\Traits\Models\HasAjaxRoutes;
 use Pingu\Core\Traits\Models\HasChildren;
 use Pingu\Core\Traits\Models\HasRouteSlug;
-use Pingu\Forms\Contracts\FormableContract;
-use Pingu\Forms\Fields\Boolean;
-use Pingu\Forms\Fields\Model;
-use Pingu\Forms\Fields\Text;
-use Pingu\Forms\Fields\Url;
-use Pingu\Forms\FormModel;
-use Pingu\Forms\Renderers\Hidden;
-use Pingu\Forms\Traits\Formable;
+use Pingu\Forms\Contracts\Models\FormableContract;
+use Pingu\Forms\Support\Fields\Checkbox;
+use Pingu\Forms\Support\Fields\ModelSelect;
+use Pingu\Forms\Support\Fields\TextInput;
+use Pingu\Forms\Traits\Models\Formable;
 use Pingu\Menu\Entities\Menu;
 use Pingu\Menu\Entities\MenuItem;
 use Pingu\Menu\Events\MenuItemCacheChanged;
@@ -71,29 +68,33 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
     {
         return [
             'name' => [
-                'type' => Text::class
+                'field' => TextInput::class
             ],
             'class' => [
-                'type' => Text::class
+                'field' => TextInput::class
             ],
             'active' => [
-                'type' => Boolean::class
+                'field' => Checkbox::class
             ],
             'url' => [
-                'type' => Url::class
+                'field' => TextInput::class
             ],
             'menu' => [
-                'type' => Model::class,
-                'model' => Menu::class,
-                'textField' => 'name',
-                'renderer' => Hidden::class
+                'field' => ModelSelect::class,
+                'options' => [
+                    'model' => Menu::class,
+                    'textField' => 'name',
+                    'default' => $this->menu
+                ]
             ],
             'permission' => [
-                'type' => Model::class,
-                'model' => Permission::class,
-                'textField' => 'name',
-                'noValueLabel' => 'No permission',
-                'label' => 'Viewing permission'
+                'field' => ModelSelect::class,
+                'options' => [
+                    'model' => Permission::class,
+                    'textField' => 'name',
+                    'noValueLabel' => 'No permission',
+                    'label' => 'Viewing permission'
+                ]
             ]
         ];
     }
@@ -110,7 +111,8 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
             'url' => 'sometimes|valid_url',
             'menu' => 'required|exists:menus,id',
             'permission' => 'nullable|exists:permissions,id',
-            'weight' => 'nullable'
+            'weight' => 'nullable',
+            'class' => 'string'
         ];
     }
 
@@ -169,9 +171,8 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
     public function isUserVisible()
     {
         if($this->permission) return true;
-        $user = \Auth::user();
-        if(!$user) return Role::find(2)->hasPermissionTo($this->permission);
-        return $user->hasPermissionTo($this->permission);
+        $model = \Permissions::getPermissionableModel();
+        return $model->hasPermissionTo($this->permission);
     }
 
     /**

@@ -7,10 +7,7 @@ use Pingu\Core\Contracts\Controllers\HandlesAjaxModelContract;
 use Pingu\Core\Entities\BaseModel;
 use Pingu\Core\Http\Controllers\BaseController;
 use Pingu\Core\Traits\Controllers\HandlesAjaxModel;
-use Pingu\Forms\Fields\Text;
-use Pingu\Forms\Form;
-use Pingu\Forms\FormModel;
-use Pingu\Forms\Renderers\Hidden;
+use Pingu\Forms\Support\Form;
 use Pingu\Menu\Entities\Menu;
 use Pingu\Menu\Entities\MenuItem;
 

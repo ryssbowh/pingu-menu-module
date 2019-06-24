@@ -4,6 +4,10 @@
 - [ ] make the nav show active menu item
 - [ ] add target attribute
 
+## v2.0.0
+- removed `DeletableMenu` and `DeletableMenuItem` middlewares
+- 
+
 ## v1.1.2
 - added `EventServiceProvider`
 - added menu caching
@@ -15,7 +19,7 @@
 - added `EmptyMenuCache` and `EmptyMenuItemCache` listeners
 - added `MenuCacheChanged` and `MenuItemCacheChanged` events
 - give perms to admin at installation
-- added `enuItemDoesntExists` and `MenuDoesntExists` Exceptions
+- added `MenuItemDoesntExists` and `MenuDoesntExists` Exceptions
 - added `Menus` facade
 
 ## v1.1.1
