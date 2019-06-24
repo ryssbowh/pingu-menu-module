@@ -35,7 +35,7 @@ class MenuServiceProvider extends ModuleServiceProvider
         $this->registerFactories();
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
-        Asset::container('modules')->add('menu-js', 'module-assets/Menu/js/Menu.js');
+        Asset::container('modules')->add('menu-js', 'module-assets/Menu.js');
     }
 
     /**
