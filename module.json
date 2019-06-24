@@ -3,7 +3,7 @@
     "alias": "menu",
     "description": "",
     "keywords": [],
-    "active": 0,
+    "active": 1,
     "order": 3,
     "providers": [
         "Pingu\\Menu\\Providers\\MenuServiceProvider"
