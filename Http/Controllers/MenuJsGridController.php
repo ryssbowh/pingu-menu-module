@@ -8,11 +8,11 @@ use Illuminate\Http\Request;
 use Pingu\Core\Entities\BaseModel;
 use Pingu\Forms\FormModel;
 use Pingu\Forms\Renderers\Hidden;
-use Pingu\Jsgrid\Http\Controllers\JsGridController;
+use Pingu\Jsgrid\Http\Controllers\JsGridModelController;
 use Pingu\Menu\Entities\Menu;
 use Pingu\Menu\Entities\MenuItem;
 
-class MenuJsGridController extends JsGridController
+class MenuJsGridController extends JsGridModelController
 {
     /**
      * @inheritDoc

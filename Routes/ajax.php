@@ -27,8 +27,8 @@ Route::get(MenuItem::getAjaxUri('create'), ['uses' => 'AjaxItemController@create
 	->middleware('can:create menu items');
 Route::post(MenuItem::getAjaxUri('store'), ['uses' => 'AjaxItemController@store'])
 	->middleware('can:create menu items');
-Route::delete(MenuItem::getAjaxUri('delete'), ['uses' => 'AjaxItemController@destroy'])
-	->middleware('deletableModel:',MenuItem::routeSlug())
+Route::delete(MenuItem::getAjaxUri('delete'), ['uses' => 'AjaxItemController@delete'])
+	->middleware('deletableModel:'.MenuItem::routeSlug())
 	->middleware('can:delete menu items');
 Route::get(MenuItem::getAjaxUri('edit'), ['uses' => 'AjaxItemController@edit'])
 	->middleware('can:edit menu items');
