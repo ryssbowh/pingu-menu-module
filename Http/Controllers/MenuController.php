@@ -31,7 +31,6 @@ class MenuController extends AdminModelController
 
     /**
      * @inheritDoc
-     * @param  BaseModel $menu
      */
     public function onSuccessfullStore(BaseModel $menu)
     {

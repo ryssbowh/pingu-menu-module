@@ -33,7 +33,8 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
     ];
 
     protected $attributes = [
-        'url' => ''
+        'url' => '',
+        'active' => 1
     ];
 
     protected $casts = [
@@ -44,6 +45,15 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
     protected $visible = ['id', 'weight', 'active', 'class','url', 'name', 'menu', 'permission'];
 
     protected $fillable = ['weight', 'active', 'class','url', 'name', 'menu', 'permission'];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function($item){
+            $item->generateMachineName();
+        });
+    }
 
     /**
      * @inheritDoc
@@ -162,6 +172,15 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
     public function getActiveChildren()
     {
         return \Menus::itemActiveChildren($this);
+    }
+
+    public function isActive()
+    {
+        $uri = trim(request()->path(), '/');
+        if($uri == trim($this->generateUri(),'/')){
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -303,6 +322,7 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
 
     /**
      * Generate a machine name for this item
+     * 
      * @return string
      */
     public function generateMachineName()
@@ -315,7 +335,8 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
         else{
             $name = $this->menu->machineName.'.'.$name;
         }
-        return $this->getUniqueMachineName($name);
+        $this::unguard();
+        $this->machineName = $this->getUniqueMachineName($name);
         
     }
 
@@ -339,8 +360,7 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
         if(is_null($this->weight)){
             $this->weight = $this->menu->getRootNextWeight();
         }
-        $this->machineName = $this->generateMachineName();
-        return parent::save();
+        return parent::save($options);
     }
 
     /**

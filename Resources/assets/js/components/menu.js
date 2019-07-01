@@ -1,4 +1,4 @@
-import * as h from 'pingu-helpers';
+import * as h from 'PinguHelpers';
 
 const Menu = (() => {
 
