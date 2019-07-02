@@ -302,10 +302,8 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
      * @return string
      */
     public function getUniqueMachineName(string $name){
-        try{
-            \Menus::itemByName($name);
-        }
-        catch(MenuItemDoesntExists $e){
+        $item = $this::findByName($name);
+        if(!$item){
             return $name;
         }
 
