@@ -1,7 +1,5 @@
 <?php
 
-namespace Pingu\Menu\Database\Seeders;
-
 use Illuminate\Database\Eloquent\Model;
 use Pingu\Core\Seeding\DisableForeignKeysTrait;
 use Pingu\Core\Seeding\MigratableSeeder;
