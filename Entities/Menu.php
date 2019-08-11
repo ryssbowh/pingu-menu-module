@@ -3,13 +3,10 @@
 namespace Pingu\Menu\Entities;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Pingu\Core\Contracts\Models\HasAdminRoutesContract;
 use Pingu\Core\Contracts\Models\HasContextualLinksContract;
 use Pingu\Core\Contracts\Models\HasItemsContract;
 use Pingu\Core\Entities\BaseModel;
-use Pingu\Core\Traits\Models\HasAdminRoutes;
-use Pingu\Core\Traits\Models\HasAjaxRoutes;
-use Pingu\Core\Traits\Models\HasRouteSlug;
+use Pingu\Core\Traits\Models\HasBasicCrudUris;
 use Pingu\Forms\Support\Fields\TextInput;
 use Pingu\Forms\Support\Types\Text;
 use Pingu\Forms\Traits\Models\Formable;
@@ -18,9 +15,9 @@ use Pingu\Jsgrid\Fields\Text as JsGridText;
 use Pingu\Jsgrid\Traits\Models\JsGridable;
 use Pingu\Menu\Events\MenuCacheChanged;
 
-class Menu extends BaseModel implements JsGridableContract, HasContextualLinksContract, HasAdminRoutesContract, HasItemsContract
+class Menu extends BaseModel implements JsGridableContract, HasContextualLinksContract, HasItemsContract
 {
-    use JsGridable, Formable, HasAjaxRoutes, HasAdminRoutes, HasRouteSlug;
+    use JsGridable, Formable, HasBasicCrudUris;
 
     protected $dispatchesEvents = [
         'saved' => MenuCacheChanged::class,
@@ -138,11 +135,11 @@ class Menu extends BaseModel implements JsGridableContract, HasContextualLinksCo
         return [
             'edit' => [
                 'title' => 'Edit',
-                'url' => $this::transformAdminUri('edit', [$this], true)
+                'url' => $this::transformUri('edit', [$this], config('core.adminPrefix'))
             ],
             'items' => [
                 'title' => 'Items',
-                'url' => $this::transformAdminUri('editItems', [$this], true)
+                'url' => $this::transformUri('editItems', [$this], config('core.adminPrefix'))
             ]
         ];
     }
@@ -187,7 +184,7 @@ class Menu extends BaseModel implements JsGridableContract, HasContextualLinksCo
     /**
      * @inheritDoc
      */
-    public static function adminEditItemsUri()
+    public static function editItemsUri()
     {
         return static::routeSlug().'/{'.static::routeSlug().'}/items';
     }

@@ -15,24 +15,24 @@ use Pingu\Menu\Entities\MenuItem;
 */
 
 
-Route::get(Menu::getAjaxUri('index'), ['uses' => 'MenuJsGridController@jsGridIndex'])
+Route::get(Menu::getUri('index'), ['uses' => 'MenuJsGridController@jsGridIndex'])
 	->middleware('can:view menus');
-Route::delete(Menu::getAjaxUri('delete'), ['uses' => 'AjaxMenuController@delete'])
+Route::delete(Menu::getUri('delete'), ['uses' => 'AjaxMenuController@delete'])
 	->middleware('deletableModel:'.Menu::routeSlug())
 	->middleware('can:delete menus');
-Route::put(Menu::getAjaxUri('update'), ['uses' => 'AjaxMenuController@update'])
+Route::put(Menu::getUri('update'), ['uses' => 'AjaxMenuController@update'])
 	->middleware('can:edit menus');
 
-Route::get(MenuItem::getAjaxUri('create'), ['uses' => 'AjaxItemController@create'])
+Route::get(MenuItem::getUri('create'), ['uses' => 'AjaxItemController@create'])
 	->middleware('can:create menu items');
-Route::post(MenuItem::getAjaxUri('store'), ['uses' => 'AjaxItemController@store'])
+Route::post(MenuItem::getUri('store'), ['uses' => 'AjaxItemController@store'])
 	->middleware('can:create menu items');
-Route::delete(MenuItem::getAjaxUri('delete'), ['uses' => 'AjaxItemController@delete'])
+Route::delete(MenuItem::getUri('delete'), ['uses' => 'AjaxItemController@delete'])
 	->middleware('deletableModel:'.MenuItem::routeSlug())
 	->middleware('can:delete menu items');
-Route::get(MenuItem::getAjaxUri('edit'), ['uses' => 'AjaxItemController@edit'])
+Route::get(MenuItem::getUri('edit'), ['uses' => 'AjaxItemController@edit'])
 	->middleware('can:edit menu items');
-Route::put(MenuItem::getAjaxUri('update'), ['uses' => 'AjaxItemController@update'])
+Route::put(MenuItem::getUri('update'), ['uses' => 'AjaxItemController@update'])
 	->middleware('can:edit menu items');
-Route::patch(MenuItem::getAjaxUri('patch'), ['uses' => 'AjaxItemController@patch'])
+Route::patch(MenuItem::getUri('patch'), ['uses' => 'AjaxItemController@patch'])
 	->middleware('can:edit menu items');

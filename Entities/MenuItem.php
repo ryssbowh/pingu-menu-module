@@ -4,10 +4,11 @@ namespace Pingu\Menu\Entities;
 
 use Illuminate\Support\Str;
 use Illuminate\Validation\Validator;
-use Pingu\Core\Contracts\Models\HasAjaxRoutesContract;
 use Pingu\Core\Contracts\Models\HasChildrenContract;
+use Pingu\Core\Contracts\Models\HasCrudUrisContract;
 use Pingu\Core\Entities\BaseModel;
 use Pingu\Core\Traits\Models\HasAjaxRoutes;
+use Pingu\Core\Traits\Models\HasBasicCrudUris;
 use Pingu\Core\Traits\Models\HasChildren;
 use Pingu\Core\Traits\Models\HasRouteSlug;
 use Pingu\Forms\Contracts\Models\FormableContract;
@@ -23,9 +24,9 @@ use Pingu\Permissions\Entities\Permission;
 use Pingu\User\Entities\Role;
 use Route;
 
-class MenuItem extends BaseModel implements HasChildrenContract, FormableContract, HasAjaxRoutesContract
+class MenuItem extends BaseModel implements HasChildrenContract, FormableContract, HasCrudUrisContract
 {
-    use HasChildren, Formable, HasAjaxRoutes, HasRouteSlug;
+    use HasChildren, Formable, HasBasicCrudUris;
 
     protected $dispatchesEvents = [
         'saved' => MenuItemCacheChanged::class,
@@ -364,15 +365,15 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
     /**
      * @inheritDoc
      */
-    public static function ajaxCreateUri()
+    public static function createUri()
     {
-        return static::ajaxStoreUri().'/create';
+        return static::storeUri().'/create';
     }
 
     /**
      * @inheritDoc
      */
-    public static function ajaxStoreUri()
+    public static function storeUri()
     {
         return Menu::routeSlug().'/{'.Menu::routeSlug().'}/'.static::routeSlugs();
     }
@@ -380,7 +381,7 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
     /**
      * @inheritDoc
      */
-    public static function ajaxDeleteUri()
+    public static function deleteUri()
     {
         return Menu::routeSlugs().'/'.static::routeSlugs().'/{'.static::routeSlug().'}';
     }
@@ -388,9 +389,9 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
     /**
      * @inheritDoc
      */
-    public static function ajaxEditUri()
+    public static function editUri()
     {
-        return static::ajaxDeleteUri().'/edit';
+        return static::deleteUri().'/edit';
     }
 
     /**
@@ -398,13 +399,13 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
      */
     public static function ajaxUpdateUri()
     {
-        return static::ajaxDeleteUri();
+        return static::deleteUri();
     }
 
     /**
      * @inheritDoc
      */
-    public static function ajaxPatchUri()
+    public static function patchUri()
     {
         return Menu::routeSlugs().'/'.static::routeSlugs();
     }

@@ -27,7 +27,7 @@ class AjaxItemController extends AjaxModelController
     protected function getStoreUri()
 	{
 		$menu = $this->request->route()->parameters()['menu'];
-		return MenuItem::transformAjaxUri('store', [$menu], true);
+		return MenuItem::transformUri('store', $menu, config('core.ajaxPrefix'));
 	}
 
 	/**

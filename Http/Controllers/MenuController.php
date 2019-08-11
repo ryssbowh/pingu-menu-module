@@ -22,10 +22,10 @@ class MenuController extends AdminModelController
     	return view('menu::edit-items')->with([
     		'menu' => $menu, 
     		'items' => $menu->getRootItems(),
-            'addItemUri' => MenuItem::transformAjaxUri('create', [$menu], true),
-            'deleteItemUri' => MenuItem::getAjaxUri('delete', true),
-            'editItemUri' => MenuItem::getAjaxUri('edit', true),
-            'patchItemsUri' => MenuItem::getAjaxUri('patch', true)
+            'addItemUri' => MenuItem::transformUri('create', [$menu], config('core.ajaxPrefix')),
+            'deleteItemUri' => MenuItem::getUri('delete', config('core.ajaxPrefix')),
+            'editItemUri' => MenuItem::getUri('edit', config('core.ajaxPrefix')),
+            'patchItemsUri' => MenuItem::getUri('patch', config('core.ajaxPrefix'))
     	]);
     }
 

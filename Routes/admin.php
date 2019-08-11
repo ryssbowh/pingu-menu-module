@@ -13,22 +13,22 @@ use Pingu\Menu\Entities\Menu;
 |
 */
 
-Route::get(Menu::getAdminUri('index'), ['uses' => 'MenuJsGridController@index'])
+Route::get(Menu::getUri('index'), ['uses' => 'MenuJsGridController@index'])
 	->name('menu.admin.menus')
 	->middleware('can:view menus');
 
-Route::get(Menu::getAdminUri('edit'), ['uses' => 'MenuController@edit'])
+Route::get(Menu::getUri('edit'), ['uses' => 'MenuController@edit'])
 	->middleware('can:edit menus');
-Route::put(Menu::getAdminUri('update'), ['uses' => 'MenuController@update'])
+Route::put(Menu::getUri('update'), ['uses' => 'MenuController@update'])
 	->middleware('can:edit menus');
 
-Route::get(Menu::getAdminUri('create'), ['uses' => 'MenuController@create'])
+Route::get(Menu::getUri('create'), ['uses' => 'MenuController@create'])
 	->name('menu.admin.menus.create')
 	->middleware('can:add menus');
-Route::post(Menu::getAdminUri('store'), ['uses' => 'MenuController@store'])
+Route::post(Menu::getUri('store'), ['uses' => 'MenuController@store'])
 	->middleware('can:add menus');
 
-Route::get(Menu::getAdminUri('editItems'), ['uses' => 'MenuController@editItems'])
+Route::get(Menu::getUri('editItems'), ['uses' => 'MenuController@editItems'])
 	->middleware('can:edit menus');
-Route::put(Menu::getAdminUri('editItems'), ['uses' => 'MenuController@updateItems'])
+Route::put(Menu::getUri('editItems'), ['uses' => 'MenuController@updateItems'])
 	->middleware('can:edit menus');
