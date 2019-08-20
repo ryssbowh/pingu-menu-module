@@ -10,10 +10,13 @@ use Pingu\Core\Entities\BaseModel;
 use Pingu\Core\Traits\Models\HasAjaxRoutes;
 use Pingu\Core\Traits\Models\HasBasicCrudUris;
 use Pingu\Core\Traits\Models\HasChildren;
+use Pingu\Core\Traits\Models\HasMachineName;
 use Pingu\Core\Traits\Models\HasRouteSlug;
+use Pingu\Core\Traits\Models\HasWeight;
 use Pingu\Forms\Contracts\Models\FormableContract;
 use Pingu\Forms\Support\Fields\Checkbox;
 use Pingu\Forms\Support\Fields\ModelSelect;
+use Pingu\Forms\Support\Fields\NumberInput;
 use Pingu\Forms\Support\Fields\TextInput;
 use Pingu\Forms\Traits\Models\Formable;
 use Pingu\Menu\Entities\Menu;
@@ -26,7 +29,7 @@ use Route;
 
 class MenuItem extends BaseModel implements HasChildrenContract, FormableContract, HasCrudUrisContract
 {
-    use HasChildren, Formable, HasBasicCrudUris;
+    use HasChildren, Formable, HasBasicCrudUris, HasWeight, HasMachineName;
 
     protected $dispatchesEvents = [
         'saved' => MenuItemCacheChanged::class,
@@ -45,7 +48,7 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
     
     protected $visible = ['id', 'weight', 'active', 'class','url', 'name', 'menu', 'permission'];
 
-    protected $fillable = ['weight', 'active', 'class','url', 'name', 'menu', 'permission'];
+    protected $fillable = ['id', 'weight', 'active', 'class','url', 'name', 'menu', 'permission'];
 
     protected static function boot()
     {
@@ -53,6 +56,7 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
 
         static::creating(function($item){
             $item->generateMachineName();
+            if(!$item->weight) $item->weight = $item->menu->getRootNextWeight();
         });
     }
 
@@ -61,7 +65,7 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
      */
     public function formAddFields()
     {
-        return ['name', 'url', 'class', 'active','menu', 'permission'];
+        return ['name', 'menu', 'url', 'class', 'active', 'permission', 'weight'];
     }
 
     /**
@@ -69,7 +73,7 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
      */
     public function formEditFields()
     {
-        return ['name', 'url', 'class', 'active','menu', 'permission'];
+        return ['name', 'menu', 'url', 'class', 'active', 'permission', 'weight'];
     }
 
     /**
@@ -83,6 +87,9 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
             ],
             'class' => [
                 'field' => TextInput::class
+            ],
+            'weight' => [
+                'field' => NumberInput::class
             ],
             'active' => [
                 'field' => Checkbox::class
@@ -298,71 +305,6 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
     }
 
     /**
-     * Suffixes $name with a number to make it unique
-     * @param  string $name
-     * @return string
-     */
-    public function getUniqueMachineName(string $name){
-        $item = $this::findByName($name);
-        if(!$item){
-            return $name;
-        }
-
-        if(substr($name, -2, 1) == '_'){
-            $number = (int)substr($name, -1);
-            $name = trim($name, $number).($number + 1);
-        }
-        else{
-            $name .= "_1";
-        }
-
-        return $this->getUniqueMachineName($name);
-    }   
-
-    /**
-     * Generate a machine name for this item
-     * 
-     * @return string
-     */
-    public function generateMachineName()
-    {
-        $name = Str::kebab($this->name);
-        $parent = $this->parent;
-        if($parent){
-            $name = Str::kebab($parent->machineName).'.'.$name;
-        }
-        else{
-            $name = $this->menu->machineName.'.'.$name;
-        }
-        $this::unguard();
-        $this->machineName = $this->getUniqueMachineName($name);
-        
-    }
-
-    /**
-     * Find a menu item by its machine name
-     * @param  string $name
-     * @return  MenuItem
-     */
-    public static function findByName(string $machineName)
-    {
-        return static::where(['machineName' => $machineName])->first();
-    }
-
-    /**
-     * Overrides save to add a default weight
-     * @param  array  $options
-     * @return bool
-     */
-    public function save(array $options = [])
-    {
-        if(is_null($this->weight)){
-            $this->weight = $this->menu->getRootNextWeight();
-        }
-        return parent::save($options);
-    }
-
-    /**
      * @inheritDoc
      */
     public static function createUri()
@@ -379,34 +321,19 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
     }
 
     /**
-     * @inheritDoc
+     * Generate a machine name for this item
      */
-    public static function deleteUri()
+    public function generateMachineName()
     {
-        return Menu::routeSlugs().'/'.static::routeSlugs().'/{'.static::routeSlug().'}';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function editUri()
-    {
-        return static::deleteUri().'/edit';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function ajaxUpdateUri()
-    {
-        return static::deleteUri();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function patchUri()
-    {
-        return Menu::routeSlugs().'/'.static::routeSlugs();
+        $name = Str::kebab($this->name);
+        $parent = $this->parent;
+        if($parent){
+            $name = Str::kebab($parent->machineName).'.'.$name;
+        }
+        else{
+            $name = $this->menu->machineName.'.'.$name;
+        }
+        $this::unguard();
+        $this->machineName = $this->getUniqueMachineName($name);
     }
 }

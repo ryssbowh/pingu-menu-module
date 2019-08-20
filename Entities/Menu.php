@@ -7,6 +7,7 @@ use Pingu\Core\Contracts\Models\HasContextualLinksContract;
 use Pingu\Core\Contracts\Models\HasItemsContract;
 use Pingu\Core\Entities\BaseModel;
 use Pingu\Core\Traits\Models\HasBasicCrudUris;
+use Pingu\Core\Traits\Models\HasMachineName;
 use Pingu\Forms\Support\Fields\TextInput;
 use Pingu\Forms\Support\Types\Text;
 use Pingu\Forms\Traits\Models\Formable;
@@ -17,7 +18,7 @@ use Pingu\Menu\Events\MenuCacheChanged;
 
 class Menu extends BaseModel implements JsGridableContract, HasContextualLinksContract, HasItemsContract
 {
-    use JsGridable, Formable, HasBasicCrudUris;
+    use JsGridable, Formable, HasBasicCrudUris, HasMachineName;
 
     protected $dispatchesEvents = [
         'saved' => MenuCacheChanged::class,
@@ -55,8 +56,7 @@ class Menu extends BaseModel implements JsGridableContract, HasContextualLinksCo
             'name' => [
                 'field' => TextInput::class,
                 'options' => [
-                    'label' => 'Name',
-                    'type' => Text::class
+                    'label' => 'Name'
                 ],
                 'attributes' => [
                     'required' => true
@@ -65,8 +65,7 @@ class Menu extends BaseModel implements JsGridableContract, HasContextualLinksCo
             'machineName' => [
                 'field' => TextInput::class,
                 'options' => [
-                    'label' => 'Machine Name',
-                    'type' => Text::class
+                    'label' => 'Machine Name'
                 ],
                 'attributes' => [
                     'class' => 'js-dashify',
@@ -135,11 +134,11 @@ class Menu extends BaseModel implements JsGridableContract, HasContextualLinksCo
         return [
             'edit' => [
                 'title' => 'Edit',
-                'url' => $this::transformUri('edit', [$this], config('core.adminPrefix'))
+                'url' => $this::makeUri('edit', [$this], adminPrefix())
             ],
             'items' => [
                 'title' => 'Items',
-                'url' => $this::transformUri('editItems', [$this], config('core.adminPrefix'))
+                'url' => $this::makeUri('editItems', [$this], adminPrefix())
             ]
         ];
     }
@@ -160,16 +159,6 @@ class Menu extends BaseModel implements JsGridableContract, HasContextualLinksCo
     public function getActiveRootItems()
     {
         return \Menus::menuActiveRootItems($this);
-    }
-
-    /**
-     * Finds a menu by its name
-     * @param  string $machineName
-     * @return Menu
-     */
-    public static function findByName(string $machineName)
-    {
-        return \Menus::menuByName($machineName);
     }
 
     /**

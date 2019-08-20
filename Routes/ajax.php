@@ -14,7 +14,9 @@ use Pingu\Menu\Entities\MenuItem;
 |
 */
 
-
+/**
+ * Menus
+ */
 Route::get(Menu::getUri('index'), ['uses' => 'MenuJsGridController@jsGridIndex'])
 	->middleware('can:view menus');
 Route::delete(Menu::getUri('delete'), ['uses' => 'AjaxMenuController@delete'])
@@ -23,6 +25,9 @@ Route::delete(Menu::getUri('delete'), ['uses' => 'AjaxMenuController@delete'])
 Route::put(Menu::getUri('update'), ['uses' => 'AjaxMenuController@update'])
 	->middleware('can:edit menus');
 
+/**
+ * Items
+ */
 Route::get(MenuItem::getUri('create'), ['uses' => 'AjaxItemController@create'])
 	->middleware('can:create menu items');
 Route::post(MenuItem::getUri('store'), ['uses' => 'AjaxItemController@store'])

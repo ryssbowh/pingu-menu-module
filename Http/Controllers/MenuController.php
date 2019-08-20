@@ -22,19 +22,19 @@ class MenuController extends AdminModelController
     	return view('menu::edit-items')->with([
     		'menu' => $menu, 
     		'items' => $menu->getRootItems(),
-            'addItemUri' => MenuItem::transformUri('create', [$menu], config('core.ajaxPrefix')),
-            'deleteItemUri' => MenuItem::getUri('delete', config('core.ajaxPrefix')),
-            'editItemUri' => MenuItem::getUri('edit', config('core.ajaxPrefix')),
-            'patchItemsUri' => MenuItem::getUri('patch', config('core.ajaxPrefix'))
+            'addItemUri' => MenuItem::makeUri('create', [$menu], adminPrefix()),
+            'deleteItemUri' => MenuItem::getUri('delete', adminPrefix()),
+            'editItemUri' => MenuItem::getUri('edit', adminPrefix()),
+            'patchItemsUri' => MenuItem::getUri('patch', adminPrefix())
     	]);
     }
 
     /**
      * @inheritDoc
      */
-    public function onSuccessfullStore(BaseModel $menu)
+    public function onStoreSuccess(BaseModel $menu)
     {
-        return redirect()->route('menu.admin.menus');
+        return redirect(MenuItem::makeUri('index', $menu, adminPrefix()));
     }
 
     /**

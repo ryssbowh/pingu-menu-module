@@ -30,8 +30,8 @@ class S2019_08_06_175031919749_Install extends MigratableSeeder
             Permission::findOrCreate(['name' => 'delete menu items', 'section' => 'Menu']),
         ]);
 
-        $menu = Menu::findByName('admin-menu');
-        $structure = MenuItem::findByName('admin-menu.structure');
+        $menu = Menu::findByMachineName('admin-menu');
+        $structure = MenuItem::findByMachineName('admin-menu.structure');
         MenuItem::firstOrCreate(['name' => 'Menus','url' => 'menu.admin.menus'], [
             'weight' => 2,
             'active' => 1,
