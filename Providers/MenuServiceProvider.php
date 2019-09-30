@@ -19,8 +19,6 @@ class MenuServiceProvider extends ModuleServiceProvider
      */
     protected $defer = false;
 
-    protected $modelFolder = 'Entities';
-
     /**
      * Boot the application events.
      *
@@ -28,7 +26,6 @@ class MenuServiceProvider extends ModuleServiceProvider
      */
     public function boot(Router $router)
     {
-        $this->registerModelSlugs(__DIR__.'/../'.$this->modelFolder);
         $this->registerTranslations();
         $this->registerConfig();
         $this->loadViewsFrom(__DIR__ . '/../Resources/views', 'menu');

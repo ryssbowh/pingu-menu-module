@@ -72,14 +72,7 @@ class Menu extends BaseModel implements JsGridableContract, HasContextualLinksCo
                     'data-dashifyfrom' => 'name',
                     'required' => true
                 ]
-            ],
-            // 'items' => [
-            //     'type' => MenuTree::class,
-            //     'options' => [
-            //         'model' => MenuItem::class
-            //         'textField' => 'name'
-            //     ]
-            // ]
+            ]
         ];
     }
 
@@ -113,6 +106,7 @@ class Menu extends BaseModel implements JsGridableContract, HasContextualLinksCo
 
     /**
      * A menu can have several items
+     * 
      * @return Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function items(): Relation
