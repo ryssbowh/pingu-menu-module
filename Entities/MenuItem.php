@@ -3,33 +3,21 @@
 namespace Pingu\Menu\Entities;
 
 use Illuminate\Support\Str;
-use Illuminate\Validation\Validator;
 use Pingu\Core\Contracts\Models\HasChildrenContract;
-use Pingu\Core\Contracts\Models\HasCrudUrisContract;
-use Pingu\Core\Entities\BaseModel;
-use Pingu\Core\Traits\Models\HasAjaxRoutes;
-use Pingu\Core\Traits\Models\HasBasicCrudUris;
 use Pingu\Core\Traits\Models\HasChildren;
 use Pingu\Core\Traits\Models\HasMachineName;
-use Pingu\Core\Traits\Models\HasRouteSlug;
 use Pingu\Core\Traits\Models\HasWeight;
-use Pingu\Forms\Contracts\Models\FormableContract;
-use Pingu\Forms\Support\Fields\Checkbox;
-use Pingu\Forms\Support\Fields\ModelSelect;
-use Pingu\Forms\Support\Fields\NumberInput;
-use Pingu\Forms\Support\Fields\TextInput;
-use Pingu\Forms\Traits\Models\Formable;
+use Pingu\Entity\Entities\Entity;
 use Pingu\Menu\Entities\Menu;
-use Pingu\Menu\Entities\MenuItem;
+use Pingu\Menu\Entities\Policies\MenuItemPolicy;
 use Pingu\Menu\Events\MenuItemCacheChanged;
-use Pingu\Menu\Exceptions\MenuItemDoesntExists;
 use Pingu\Permissions\Entities\Permission;
 use Pingu\User\Entities\Role;
 use Route;
 
-class MenuItem extends BaseModel implements HasChildrenContract, FormableContract, HasCrudUrisContract
+class MenuItem extends Entity implements HasChildrenContract
 {
-    use HasChildren, Formable, HasBasicCrudUris, HasWeight, HasMachineName;
+    use HasChildren, HasWeight, HasMachineName;
 
     protected $dispatchesEvents = [
         'saved' => MenuItemCacheChanged::class,
@@ -60,99 +48,19 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
         });
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function formAddFields()
+    public function getPolicy(): string
     {
-        return ['name', 'menu', 'url', 'class', 'active', 'permission', 'weight'];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function formEditFields()
-    {
-        return ['name', 'menu', 'url', 'class', 'active', 'permission', 'weight'];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function fieldDefinitions()
-    {
-        return [
-            'name' => [
-                'field' => TextInput::class
-            ],
-            'class' => [
-                'field' => TextInput::class
-            ],
-            'weight' => [
-                'field' => NumberInput::class
-            ],
-            'active' => [
-                'field' => Checkbox::class
-            ],
-            'url' => [
-                'field' => TextInput::class
-            ],
-            'menu' => [
-                'field' => ModelSelect::class,
-                'options' => [
-                    'model' => Menu::class,
-                    'textField' => 'name',
-                    'default' => $this->menu
-                ]
-            ],
-            'permission' => [
-                'field' => ModelSelect::class,
-                'options' => [
-                    'model' => Permission::class,
-                    'textField' => 'name',
-                    'noValueLabel' => 'No permission',
-                    'label' => 'Viewing permission'
-                ]
-            ]
-        ];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function validationRules()
-    {
-        return [
-            'name' => 'required',
-            'menu' => 'required',
-            'active' => 'boolean',
-            'url' => 'sometimes|valid_url',
-            'menu' => 'required|exists:menus,id',
-            'permission' => 'nullable|exists:permissions,id',
-            'weight' => 'nullable',
-            'class' => 'string'
-        ];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function validationMessages()
-    {
-        return [
-            'name.required' => 'Name is required',
-            'menu.required' => 'Menu is required',
-            'url.valid_url' => 'This url doesn\'t exist'
-        ];
+        return MenuItemPolicy::class;
     }
 
     /**
      * A item belongs to one menu
+     * 
      * @return Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function menu()
     {
-    	return $this->belongsTo(Menu::class);
+        return $this->belongsTo(Menu::class);
     }
 
     /**
@@ -166,6 +74,7 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
 
     /**
      * gets this item's children. uses the facade for caching
+     * 
      * @return Collection
      */
     public function getChildren()
@@ -175,6 +84,7 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
 
     /**
      * Gets this item's active children. Uses the facade for caching
+     * 
      * @return Collection
      */
     public function getActiveChildren()
@@ -195,11 +105,12 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
      * Does the logged in user have the permission to see this
      * @return bool
      */
-    public function isUserVisible()
+    protected function isUserVisible($permissionable)
     {
-        if($this->permission) return true;
-        $model = \Permissions::getPermissionableModel();
-        return $model->hasPermissionTo($this->permission);
+        if (!$this->permission_id) {
+            return true;
+        }
+        return $permissionable->hasPermissionTo($this->permission_id);
     }
 
     /**
@@ -215,29 +126,34 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
      * Does this have at least one child that the current user can see.
      * @return boolean
      */
-    public function hasVisibleChild()
+    protected function hasVisibleChild($permissionable)
     {
-        if($this->hasActiveChildren()) return false;
-        foreach($this->getChildren() as $child){
-            if($child->isVisible()) return true;
+        if (!$this->hasActiveChildren()) return false;
+        foreach ($this->getActiveChildren() as $child) {
+            if ($child->isVisible($permissionable)) return true;
         }
         return false;
     }
 
     /**
      * Is this item visible to the current user, and if not, is one of its children visible
+     * 
      * @return boolean
      */
-    public function isVisible()
+    public function isVisible($permissionable = null)
     {
-        return ($this->isUserVisible() or $this->hasVisibleChild());
+        $permissionable = \Permissions::resolvePermissionable($permissionable);
+        $visibleChild = $this->hasVisibleChild($permissionable);
+        $userVisible = $this->isUserVisible($permissionable);
+        return ($visibleChild or $userVisible);
     }
 
     /**
-     * Does this item have a link
+     * Does this item have a valid link
+     * 
      * @return boolean
      */
-    public function hasLink()
+    public function hasValidLink()
     {
         return !empty($this->generateUri());
     }
@@ -245,11 +161,13 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
     /**
      * Generates the link for this item. Will return a span element is no uri is
      * set for this item or if the user doesn't have the permission to see it.
+     * 
      * @return string
      */
-    public function generateLink()
+    public function generateLink($permissionable = null)
     {
-        if($this->url and $this->isUserVisible()){
+        $permissionable = \Permissions::resolvePermissionable($permissionable);
+        if ($this->url and $this->isUserVisible($permissionable)) {
             return '<a href="'.$this->generateUri().'">'.$this->name.'</a>';
         }
         return '<span>'.$this->name.'</span>';
@@ -257,17 +175,26 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
 
     /**
      * Generates the uri for this item, do not check permission.
+     * 
      * @return string|false
      */
     public function generateUri()
     {
         $url = $this->url;
-        if(!$url or substr($url, 0, 4) == 'http' or substr($url, 0, 1) == '/'){
+        if (!$url or substr($url, 0, 4) == 'http' or substr($url, 0, 1) == '/') {
             return $url;
         }
-        $route = Route::getRoutes()->getByName($url);
-        if($route) return '/'.$route->uri();
+        if ($route = Route::getRoutes()->getByName($url)) {
+            return '/'.$route->uri();
+        }
         return false;
+    }
+
+    public function toArray()
+    {
+        $array = parent::toArray();
+        $array['uri'] = $this->generateUri();
+        return $array;
     }
 
     /**
@@ -302,22 +229,6 @@ class MenuItem extends BaseModel implements HasChildrenContract, FormableContrac
         }
         $item->save();
         return $item;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function createUri()
-    {
-        return static::storeUri().'/create';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function storeUri()
-    {
-        return Menu::routeSlug().'/{'.Menu::routeSlug().'}/'.static::routeSlugs();
     }
 
     /**

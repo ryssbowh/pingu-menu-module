@@ -6,6 +6,8 @@ return [
     'menu-item-class' => 'menu-item',
     'cache-keys' => [
     	'menus' => 'menus',
-    	'items' => 'items'
-    ]
+    	'items' => 'items',
+        'built' => 'built'
+    ],
+    'use-cache' => true
 ];

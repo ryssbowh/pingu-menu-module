@@ -3,7 +3,7 @@
     "alias": "menu",
     "description": "Menus for Pingu",
     "keywords": [],
-    "order": 3,
+    "order": -95,
     "core": 1,
     "providers": [
         "Pingu\\Menu\\Providers\\MenuServiceProvider"

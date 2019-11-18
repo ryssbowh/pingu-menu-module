@@ -6,7 +6,7 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Pingu\Menu\Events\MenuCacheChanged;
 use Pingu\Menu\Events\MenuItemCacheChanged;
 use Pingu\Menu\Listeners\EmptyMenuCache;
-use Pingu\Menu\Listeners\EmptyMenuItemCache;
+use Pingu\Permissions\Events\PermissionCacheChanged;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -15,7 +15,10 @@ class EventServiceProvider extends ServiceProvider
             EmptyMenuCache::class
         ],
         MenuItemCacheChanged::class => [
-            EmptyMenuItemCache::class
+            EmptyMenuCache::class
+        ],
+        PermissionCacheChanged::class => [
+            EmptyMenuCache::class
         ]
     ];
 }

@@ -6,6 +6,8 @@ use Asset;
 use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Routing\Router;
 use Pingu\Core\Support\ModuleServiceProvider;
+use Pingu\Menu\Entities\Menu;
+use Pingu\Menu\Entities\MenuItem;
 use Pingu\Menu\Http\Middleware\DeletableMenu;
 use Pingu\Menu\Http\Middleware\DeletableMenuItem;
 use Pingu\Menu\Menus;
@@ -18,6 +20,11 @@ class MenuServiceProvider extends ModuleServiceProvider
      * @var bool
      */
     protected $defer = false;
+
+    protected $entities = [
+        Menu::class,
+        MenuItem::class
+    ];
 
     /**
      * Boot the application events.
@@ -44,6 +51,7 @@ class MenuServiceProvider extends ModuleServiceProvider
         $this->app->singleton('menu.menus', Menus::class);
         $this->app->register(RouteServiceProvider::class);
         $this->app->register(EventServiceProvider::class);
+        $this->registerEntities($this->entities);
     }
 
     /**

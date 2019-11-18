@@ -25,6 +25,6 @@ class EmptyMenuCache
      */
     public function handle($event)
     {
-        \Menus::forgetMenusCache();
+        \Menus::forgetAllCaches();
     }
 }
