@@ -18,6 +18,8 @@ Menus and menuItems can be saved as non-deletable (not through the ui), middlewa
 ### Caching
 Menus and MenuItems are cached to reduce db queries. By using the facade `Menus` you are retrieving from the cache.
 
+Menus are built for each role and saved in cache. That cache is emptied when permission are saved or when the Menu cache changes (see Events below)
+
 ### Events
 - `MenuCacheChanged` listened by `EmptyMenuCache`
 - `MenuItemCacheChanged` listened by `EmptyMenuItemCache`
