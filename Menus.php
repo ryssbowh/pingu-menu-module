@@ -26,6 +26,21 @@ class Menus
     }
 
     /**
+     * Gets a menu item by its id or name
+     * 
+     * @param int|string $nameOrId
+     * 
+     * @return Menu
+     */
+    public function item($nameOrId)
+    {
+        if (is_int($nameOrId)) {
+            return $this->itemById($nameOrId);
+        }
+        return $this->itemByName($nameOrId);
+    }
+
+    /**
      * Gets a menu by its id
      * 
      * @param int $id
@@ -169,10 +184,13 @@ class Menus
      * 
      * @return MenuItem
      */
-    protected function resolveItem($item)
+    public function resolveItem($item)
     {
+        if (is_null($item)) {
+            return null;
+        }
         if ($item instanceof MenuItem) return $item;
-        return $this->itemById($item);
+        return $this->item($item);
     }
 
     /**
@@ -182,8 +200,11 @@ class Menus
      * 
      * @return Menu
      */
-    protected function resolveMenu($menu)
+    public function resolveMenu($menu)
     {
+        if (is_null($menu)) {
+            return null;
+        }
         if ($menu instanceof Menu) return $menu;
         return $this->menu($menu);
     }

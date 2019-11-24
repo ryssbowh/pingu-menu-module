@@ -219,12 +219,14 @@ class MenuItem extends Entity implements HasChildrenContract
     /**
      * @inheritDoc
      */
-    public static function create(array $values, Menu $menu, MenuItem $parent = null)
+    public static function create(array $values, $menu, $parent = null)
     {
         $item = new static;
         $item->fill($values);
+        $menu = \Menus::resolveMenu($menu);
+        $parent = \Menus::resolveItem($parent);
         $item->menu()->associate($menu);
-        if($parent){
+        if ($parent) {
             $item->parent()->associate($parent);
         }
         $item->save();
@@ -238,10 +240,9 @@ class MenuItem extends Entity implements HasChildrenContract
     {
         $name = Str::kebab($this->name);
         $parent = $this->parent;
-        if($parent){
+        if ($parent) {
             $name = Str::kebab($parent->machineName).'.'.$name;
-        }
-        else{
+        } else {
             $name = $this->menu->machineName.'.'.$name;
         }
         $this::unguard();
