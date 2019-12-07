@@ -71,6 +71,7 @@ class Menu extends Entity implements HasItemsContract
 
     /**
      * Returns the next weight
+     *
      * @return integer
      */
     public function getRootNextWeight()

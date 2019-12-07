@@ -81,7 +81,6 @@ class Menus
      * 
      * @throws MenuItemDoesntExists
      * @return MenuItem
-     * 
      */
     public function itemById(int $id)
     {
@@ -112,7 +111,7 @@ class Menus
     /**
      * Returns all MenuItem that are direct children of $menu
      * 
-     * @param Menu|int|string   $menu
+     * @param Menu|int|string $menu
      * 
      * @return Collection
      */
@@ -128,7 +127,7 @@ class Menus
     /**
      * Returns all MenuItem that are direct children of $menu and active
      * 
-     * @param Menu|int|string   $menu
+     * @param Menu|int|string $menu
      * 
      * @return Collection
      */
@@ -141,7 +140,7 @@ class Menus
     /**
      * Return the next item weight for a menu (root level)
      * 
-     * @param Menu|int|string   $menu
+     * @param Menu|int|string $menu
      * 
      * @return int
      */
@@ -189,7 +188,8 @@ class Menus
         if (is_null($item)) {
             return null;
         }
-        if ($item instanceof MenuItem) return $item;
+        if ($item instanceof MenuItem) { return $item;
+        }
         return $this->item($item);
     }
 
@@ -205,7 +205,8 @@ class Menus
         if (is_null($menu)) {
             return null;
         }
-        if ($menu instanceof Menu) return $menu;
+        if ($menu instanceof Menu) { return $menu;
+        }
         return $this->menu($menu);
     }
 
@@ -217,9 +218,11 @@ class Menus
     protected function resolveMenuCache()
     {
         if (config('menu.use-cache')) {
-            return \Cache::rememberForever(config('menu.cache-keys.menus'), function () {
-                return Menu::get();
-            });
+            return \Cache::rememberForever(
+                config('menu.cache-keys.menus'), function () {
+                    return Menu::get();
+                }
+            );
         }
         return Menu::get();
     }
@@ -231,9 +234,11 @@ class Menus
     protected function resolveItemsCache()
     {
         if (config('menu.use-cache')) {
-            return \Cache::rememberForever(config('menu.cache-keys.items'), function () {
-                return MenuItem::get();
-            });
+            return \Cache::rememberForever(
+                config('menu.cache-keys.items'), function () {
+                    return MenuItem::get();
+                }
+            );
         }
         return MenuItem::get();
     }
@@ -276,7 +281,7 @@ class Menus
      * Builds items for a role
      * 
      * @param $items
-     * @param Role   $role
+     * @param Role  $role
      * 
      * @return array
      */
@@ -311,10 +316,12 @@ class Menus
         if (config('menu.use-cache')) {
             $key = config('menu.cache-keys.built').'.'.$role->id;
             $_this = $this;
-            return \ArrayCache::rememberForever($key, function () use ($menu, $role, $_this) {
-                $items = $_this->menuActiveRootItems($menu);
-                return $_this->buildItems($items, $role);
-            });
+            return \ArrayCache::rememberForever(
+                $key, function () use ($menu, $role, $_this) {
+                    $items = $_this->menuActiveRootItems($menu);
+                    return $_this->buildItems($items, $role);
+                }
+            );
         }
 
         $items = $this->menuActiveRootItems($menu);
@@ -324,8 +331,8 @@ class Menus
     /**
      * Buidl a menu for many roles
      * 
-     * @param Menu $menu
-     * @param      $roles
+     * @param Menu  $menu
+     * @param $roles
      * 
      * @return array        
      */

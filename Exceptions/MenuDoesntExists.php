@@ -2,4 +2,6 @@
 
 namespace Pingu\Menu\Exceptions;
 
-class MenuDoesntExists extends \Exception{}
+class MenuDoesntExists extends \Exception
+{
+}

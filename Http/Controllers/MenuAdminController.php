@@ -15,14 +15,16 @@ class MenuAdminController extends AdminEntityController
     {
         \ContextualLinks::addFromObject($menu);
 
-        return view('menu::edit-items')->with([
+        return view('menu::edit-items')->with(
+            [
             'menu' => $menu, 
             'items' => $menu->getRootItems(),
             'addItemUri' => MenuItem::uris()->make('create', [$menu], adminPrefix()),
             'deleteItemUri' => MenuItem::uris()->get('delete', adminPrefix()),
             'editItemUri' => MenuItem::uris()->get('edit', adminPrefix()),
             'patchItemsUri' => MenuItem::uris()->get('patch', adminPrefix())
-        ]);
+            ]
+        );
     }
 
     /**

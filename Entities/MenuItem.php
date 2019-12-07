@@ -42,10 +42,13 @@ class MenuItem extends Entity implements HasChildrenContract
     {
         parent::boot();
 
-        static::creating(function($item){
-            $item->generateMachineName();
-            if(!$item->weight) $item->weight = $item->menu->getRootNextWeight();
-        });
+        static::creating(
+            function ($item) {
+                $item->generateMachineName();
+                if(!$item->weight) { $item->weight = $item->menu->getRootNextWeight();
+                }
+            }
+        );
     }
 
     public function getPolicy(): string
@@ -65,6 +68,7 @@ class MenuItem extends Entity implements HasChildrenContract
 
     /**
      * A item has one viewing permission
+     *
      * @return Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function permission()
@@ -95,7 +99,7 @@ class MenuItem extends Entity implements HasChildrenContract
     public function isActive()
     {
         $uri = trim(request()->path(), '/');
-        if($uri == trim($this->generateUri(),'/')){
+        if($uri == trim($this->generateUri(), '/')) {
             return true;
         }
         return false;
@@ -103,6 +107,7 @@ class MenuItem extends Entity implements HasChildrenContract
 
     /**
      * Does the logged in user have the permission to see this
+     *
      * @return bool
      */
     protected function isUserVisible($permissionable)
@@ -115,6 +120,7 @@ class MenuItem extends Entity implements HasChildrenContract
 
     /**
      * Does this item have active children
+     *
      * @return boolean
      */
     public function hasActiveChildren()
@@ -124,13 +130,16 @@ class MenuItem extends Entity implements HasChildrenContract
 
     /**
      * Does this have at least one child that the current user can see.
+     *
      * @return boolean
      */
     protected function hasVisibleChild($permissionable)
     {
-        if (!$this->hasActiveChildren()) return false;
+        if (!$this->hasActiveChildren()) { return false;
+        }
         foreach ($this->getActiveChildren() as $child) {
-            if ($child->isVisible($permissionable)) return true;
+            if ($child->isVisible($permissionable)) { return true;
+            }
         }
         return false;
     }
@@ -203,12 +212,12 @@ class MenuItem extends Entity implements HasChildrenContract
     public static function firstOrCreate(array $attributes, array $values, Menu $menu, MenuItem $parent = null)
     {
         $item = static::where($attributes)->first();
-        if(!$item){
+        if(!$item) {
             $item = new static;
             $item->fill($attributes);
             $item->fill($values);
             $item->menu()->associate($menu);
-            if($parent){
+            if($parent) {
                 $item->parent()->associate($parent);
             }
             $item->save();

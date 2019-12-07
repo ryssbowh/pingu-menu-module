@@ -20,7 +20,8 @@ class S2019_08_06_175031919749_InstallMenu extends MigratableSeeder
         Model::unguard();
 
         $perm = Permission::create(['name' => 'view menus', 'section' => 'Menu']);
-        Role::find(4)->givePermissionTo([
+        Role::find(4)->givePermissionTo(
+            [
             $perm,
             Permission::findOrCreate(['name' => 'add menus', 'section' => 'Menu']),
             Permission::findOrCreate(['name' => 'edit menus', 'section' => 'Menu']),
@@ -28,17 +29,20 @@ class S2019_08_06_175031919749_InstallMenu extends MigratableSeeder
             Permission::findOrCreate(['name' => 'edit menu items', 'section' => 'Menu']),
             Permission::findOrCreate(['name' => 'create menu items', 'section' => 'Menu']),
             Permission::findOrCreate(['name' => 'delete menu items', 'section' => 'Menu']),
-        ]);
+            ]
+        );
 
         $menu = Menu::findByMachineName('admin-menu');
         $structure = MenuItem::findByMachineName('admin-menu.structure');
-        MenuItem::firstOrCreate(['name' => 'Menus','url' => 'menu.admin.menus'], [
+        MenuItem::firstOrCreate(
+            ['name' => 'Menus','url' => 'menu.admin.menus'], [
             'weight' => 2,
             'active' => 1,
             'url' => 'menu.admin.menus',
             'deletable' => 0,
             'permission_id' => $perm->id
-        ], $menu, $structure);
+            ], $menu, $structure
+        );
     }
 
     /**

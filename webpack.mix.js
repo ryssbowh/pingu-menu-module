@@ -10,13 +10,15 @@ var publicPath = 'module-assets/';
 //Javascript
 mix.js(assetPath + '/js/app.js', publicPath + name+'.js').sourceMaps();
 
-mix.webpackConfig({
-  resolve: {
-    alias: {
-      'pingu-menu': path.resolve(assetPath + '/js/components', './menu')
+mix.webpackConfig(
+    {
+        resolve: {
+            alias: {
+                'pingu-menu': path.resolve(assetPath + '/js/components', './menu')
+            }
+        }
     }
-  }
-});
+);
 
 //Css
 mix.sass(assetPath + '/sass/app.scss', publicPath + name+'.css');
