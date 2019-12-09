@@ -2,11 +2,11 @@
 
 namespace Modules\Menu\Entities\Policies;
 
-use Pingu\Core\Support\Policy;
+use Pingu\Entity\Support\BaseEntityPolicy;
 use Pingu\Menu\Entities\Menu;
 use Pingu\User\Entities\User;
 
-class MenuPolicy extends Policy
+class MenuPolicy extends BaseEntityPolicy
 {
     protected function userOrGuest(?User $user)
     {
