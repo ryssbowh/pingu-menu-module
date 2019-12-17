@@ -37,7 +37,6 @@ class MenuServiceProvider extends ModuleServiceProvider
         $this->registerConfig();
         $this->loadViewsFrom(__DIR__ . '/../Resources/views', 'menu');
         $this->registerFactories();
-
         Asset::container('modules')->add('menu-js', 'module-assets/Menu.js');
     }
 

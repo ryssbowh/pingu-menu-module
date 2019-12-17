@@ -37,13 +37,13 @@ class MenuAdminController extends AdminEntityController
 
     protected function afterEditFormCreated(Form $form, Entity $entity)
     {
-        $form->getElement('machineName')->attribute('disabled', true);
+        $form->getElement('machineName')->option('disabled', true);
     }
 
     protected function afterCreateFormCreated(Form $form, Entity $entity)
     {
         $field = $form->getElement('machineName');
         $field->classes->add('js-dashify');
-        $field->attribute('data-dashifyfrom', 'name');
+        $field->option('data-dashifyfrom', 'name');
     }
 }
