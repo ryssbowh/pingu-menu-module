@@ -9,5 +9,5 @@ return [
         'items' => 'items',
         'built' => 'built'
     ],
-    'use-cache' => true
+    'use-cache' => !env('APP_DEBUG')
 ];
