@@ -188,7 +188,8 @@ class Menus
         if (is_null($item)) {
             return null;
         }
-        if ($item instanceof MenuItem) { return $item;
+        if ($item instanceof MenuItem) {
+            return $item;
         }
         return $this->item($item);
     }
