@@ -1,7 +1,7 @@
 ## Menu Module
 
 ## TODO
-- [x] make the nav show active menu item
+- [ ] make the nav show active menu item (including multi level children)
 - [ ] add target attribute
 
 ### Menus
