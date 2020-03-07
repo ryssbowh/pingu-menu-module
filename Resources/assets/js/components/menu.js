@@ -1,15 +1,13 @@
-import * as h from 'PinguHelpers';
-
 const Menu = (() => {
 
     function getCreateItemForm(menu)
     {
-        return h.post('/api/menus/'+menu+'/create');
+        return Helpers.post('/api/menus/'+menu+'/create');
     }
 
     function loadItem(item)
     {
-        return h.get('/api/menus/item/'+item);
+        return Helpers.get('/api/menus/item/'+item);
     }
 
     return {

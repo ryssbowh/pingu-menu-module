@@ -14,7 +14,7 @@ mix.webpackConfig(
     {
         resolve: {
             alias: {
-                'pingu-menu': path.resolve(assetPath + '/js/components', './menu')
+                'MenuModule': path.resolve(assetPath + '/js/components', './menu')
             }
         }
     }
