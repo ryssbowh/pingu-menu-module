@@ -15,7 +15,7 @@ class MenuAdminController extends AdminEntityController
     {
         \ContextualLinks::addFromObject($menu);
 
-        return view('menu::edit-items')->with(
+        return view('pages.menu.editItems')->with(
             [
             'menu' => $menu, 
             'items' => $menu->getRootItems(),
