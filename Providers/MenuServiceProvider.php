@@ -64,8 +64,8 @@ class MenuServiceProvider extends ModuleServiceProvider
             __DIR__.'/../Config/config.php', 'menu'
         );
         $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('module-menu.php')
-        ], 'config');
+            __DIR__.'/../Config/config.php' => config_path('menu.php')
+        ], 'menu-config');
     }
 
     /**
