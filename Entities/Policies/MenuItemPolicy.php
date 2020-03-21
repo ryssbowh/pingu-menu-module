@@ -2,11 +2,13 @@
 
 namespace Pingu\Menu\Entities\Policies;
 
-use Pingu\Core\Support\Policy;
+use Pingu\Entity\Contracts\BundleContract;
+use Pingu\Entity\Entities\Entity;
+use Pingu\Entity\Support\BaseEntityPolicy;
 use Pingu\Menu\Entities\MenuItem;
 use Pingu\User\Entities\User;
 
-class MenuItemPolicy extends Policy
+class MenuItemPolicy extends BaseEntityPolicy
 {
     protected function userOrGuest(?User $user)
     {
@@ -16,30 +18,30 @@ class MenuItemPolicy extends Policy
     public function index(?User $user)
     {
         $user = $this->userOrGuest($user);
-        return $user->hasPermissionTo('view '. MenuItem::friendlyNames());
+        return $user->hasPermissionTo('view menus');
     }
 
     public function view(?User $user, Entity $entity)
     {
         $user = $this->userOrGuest($user);
-        return $user->hasPermissionTo('view '.$entity::friendlyNames());
+        return $user->hasPermissionTo('view menus');
     }
 
     public function edit(?User $user, Entity $entity)
     {
         $user = $this->userOrGuest($user);
-        return $user->hasPermissionTo('edit '.$entity::friendlyNames());
+        return $user->hasPermissionTo('edit menus');
     }
 
     public function delete(?User $user, Entity $entity)
     {
         $user = $this->userOrGuest($user);
-        return $user->hasPermissionTo('delete '.$entity::friendlyNames());
+        return $user->hasPermissionTo('delete menu items');
     }
 
-    public function create(?User $user)
+    public function create(?User $user, ?BundleContract $bundle = null)
     {
         $user = $this->userOrGuest($user);
-        return $user->hasPermissionTo('edit '. MenuItem::friendlyNames());
+        return $user->hasPermissionTo('create menu items');
     }
 }

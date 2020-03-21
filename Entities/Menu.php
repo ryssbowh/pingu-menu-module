@@ -3,13 +3,13 @@
 namespace Pingu\Menu\Entities;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Modules\Menu\Entities\Policies\MenuPolicy;
 use Pingu\Core\Contracts\Models\HasItemsContract;
 use Pingu\Core\Traits\Models\HasMachineName;
 use Pingu\Entity\Entities\Entity;
 use Pingu\Forms\Support\Fields\TextInput;
 use Pingu\Forms\Support\Types\Text;
 use Pingu\Jsgrid\Fields\Text as JsGridText;
+use Pingu\Menu\Entities\Policies\MenuPolicy;
 use Pingu\Menu\Events\MenuCacheChanged;
 
 class Menu extends Entity implements HasItemsContract
@@ -29,11 +29,17 @@ class Menu extends Entity implements HasItemsContract
 
     public $adminListFields = ['name'];
 
+    /**
+     * @inheritDoc
+     */
     public function getRouteKeyName()
     {
         return 'machineName';
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getPolicy(): string
     {
         return MenuPolicy::class;

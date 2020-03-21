@@ -199,6 +199,9 @@ class MenuItem extends Entity implements HasChildrenContract
         return false;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function toArray()
     {
         $array = parent::toArray();
