@@ -293,9 +293,12 @@ class Menus
             if ($item->isVisible($role)) {
                 $array = $item->toArray();
                 $array['item'] = $item;
+                $array['uri'] = $item->generateUri();
                 $array['link'] = $item->generateLink($role);
                 $children = $item->getActiveChildren();
+                $array['hasChildren'] = false;
                 if (!$children->isEmpty()) {
+                    $array['hasChildren'] = true;
                     $array['children'] = $this->buildItems($children, $role);
                 }
                 $out[$item->machineName] = $array;

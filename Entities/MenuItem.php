@@ -105,6 +105,16 @@ class MenuItem extends Entity implements HasChildrenContract
         return false;
     }
 
+    public function hasActiveChild()
+    {
+        foreach ($this->children as $child) {
+            if ($child->isActive() or $child->hasActiveChild()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Does the logged in user have the permission to see this
      *
