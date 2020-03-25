@@ -293,7 +293,6 @@ class Menus
             if ($item->isVisible($role)) {
                 $array = $item->toArray();
                 $array['item'] = $item;
-                $array['uri'] = $item->generateUri();
                 $array['link'] = $item->generateLink($role);
                 $children = $item->getActiveChildren();
                 $array['hasChildren'] = false;
@@ -333,9 +332,9 @@ class Menus
     }
 
     /**
-     * Buidl a menu for many roles
+     * Build a menu for many roles
      * 
-     * @param Menu  $menu
+     * @param Menu $menu
      * @param $roles
      * 
      * @return array        
@@ -359,9 +358,40 @@ class Menus
     public function build($menu): array
     {
         $menu = $this->resolveMenu($menu);
-        if ($user = \Auth::user()) {
-            return $this->buildForRoles($menu, $user->roles);
+        $user = \Auth::user();
+        $build = $this->buildForRoles($menu, $user ? $user->roles : \Permissions::guestRole());
+        $currentUri = '/'.request()->path();
+        return $this->resolveActiveItems($build, $currentUri);
+    }
+
+    /**
+     * Calculate items that are active or that have active items
+     * 
+     * @param array  $build
+     * @param string $uri
+     * 
+     * @return array
+     */
+    protected function resolveActiveItems(array $build, string $uri)
+    {
+        foreach ($build as $key => $array) {
+            if ($array['hasChildren']) {
+                $array['children'] = $this->resolveActiveItems($array['children'], $uri);
+            }
+            $array['active'] = false;
+            if ($uri == $array['uri']) {
+                $array['active'] = true;
+            }
+            $array['hasActiveChild'] = false;
+            if ($array['hasChildren']) {
+                foreach ($array['children'] as $child) {
+                    if ($child['active']) {
+                        $array['hasActiveChild'] = true;
+                    }
+                }
+            }
+            $build[$key] = $array;
         }
-        return $this->buildForRole($menu, \Permissions::guestRole());
+        return $build;
     }
 }

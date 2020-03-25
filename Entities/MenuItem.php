@@ -38,6 +38,8 @@ class MenuItem extends Entity implements HasChildrenContract
 
     protected $fillable = ['id', 'weight', 'active', 'class','url', 'name', 'menu', 'permission'];
 
+    protected $with = ['children'];
+
     protected static function boot()
     {
         parent::boot();
