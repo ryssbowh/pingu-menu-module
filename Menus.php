@@ -21,8 +21,10 @@ class Menus
     {
         if (is_int($nameOrId)) {
             return $this->menuById($nameOrId);
+        } elseif (is_string($nameOrId)) {
+            return $this->menuByName($nameOrId);
         }
-        return $this->menuByName($nameOrId);
+        return $nameOrId;
     }
 
     /**
@@ -36,8 +38,10 @@ class Menus
     {
         if (is_int($nameOrId)) {
             return $this->itemById($nameOrId);
+        } elseif (is_string($nameOrId)) {
+            return $this->itemByName($nameOrId);
         }
-        return $this->itemByName($nameOrId);
+        return $nameOrId;
     }
 
     /**
@@ -88,7 +92,7 @@ class Menus
         if (is_null($item)) {
             throw new MenuItemDoesntExists("Couldn't find an item for id $id");
         }
-        return $menu;
+        return $item;
     }
 
     /**
@@ -158,7 +162,7 @@ class Menus
      * 
      * @return Collection
      */
-    public function itemChildren($item)
+    public function childrenOf($item)
     {
         $item = $this->resolveItem($item);
         return $this->resolveItemsCache()->where('parent_id', $item->id)->sortBy('weight');
@@ -173,7 +177,22 @@ class Menus
      */
     public function itemActiveChildren($item)
     {
-        return $this->itemChildren($item)->where('active', 1);
+        return $this->childrenOf($item)->where('active', 1);
+    }
+
+    /**
+     * Get the parent of an item
+     * 
+     * @param int|MenuItem|string $item
+     * 
+     * @return ?MenuItem
+     */
+    public function parentOf($item)
+    {
+        $item = $this->item($item);
+        if ($item->parent_id) {
+            return $this->item($item->parent_id);
+        }
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace Pingu\Menu\Entities\Routes;
 
-use Pingu\Entity\Support\BaseEntityRoutes;
+use Pingu\Entity\Support\Routes\BaseEntityRoutes;
 
 class MenuRoutes extends BaseEntityRoutes
 {

@@ -39,6 +39,7 @@ class MenuItemFields extends BaseFieldRepository
                 'permission',
                 [
                     'model' => Permission::class,
+                    'items' => Permission::orderBy('name')->get(),
                     'textField' => 'name',
                     'noValueLabel' => 'No permission',
                     'label' => 'Viewing permission'

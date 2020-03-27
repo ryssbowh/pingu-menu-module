@@ -85,7 +85,17 @@ class MenuItem extends Entity implements HasChildrenContract
      */
     public function getChildren()
     {
-        return \Menus::itemChildren($this);
+        return \Menus::childrenOf($this);
+    }
+
+    /**
+     * gets this item's parent. uses the facade for caching
+     * 
+     * @return ?MenuItem
+     */
+    public function getParent()
+    {
+        return \Menus::parentOf($this);
     }
 
     /**
