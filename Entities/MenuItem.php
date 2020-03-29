@@ -7,7 +7,7 @@ use Pingu\Core\Contracts\Models\HasChildrenContract;
 use Pingu\Core\Traits\Models\HasChildren;
 use Pingu\Core\Traits\Models\HasMachineName;
 use Pingu\Core\Traits\Models\HasWeight;
-use Pingu\Entity\Entities\Entity;
+use Pingu\Entity\Support\Entity;
 use Pingu\Menu\Entities\Menu;
 use Pingu\Menu\Entities\Policies\MenuItemPolicy;
 use Pingu\Menu\Events\MenuItemCacheChanged;

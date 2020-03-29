@@ -2,7 +2,7 @@
 
 namespace Pingu\Menu\Entities\Uris;
 
-use Pingu\Entity\Support\BaseEntityUris;
+use Pingu\Entity\Support\Uris\BaseEntityUris;
 
 class MenuUris extends BaseEntityUris
 {

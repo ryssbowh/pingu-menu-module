@@ -5,7 +5,7 @@ namespace Pingu\Menu\Entities;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Pingu\Core\Contracts\Models\HasItemsContract;
 use Pingu\Core\Traits\Models\HasMachineName;
-use Pingu\Entity\Entities\Entity;
+use Pingu\Entity\Support\Entity;
 use Pingu\Forms\Support\Fields\TextInput;
 use Pingu\Forms\Support\Types\Text;
 use Pingu\Jsgrid\Fields\Text as JsGridText;

@@ -2,7 +2,7 @@
 
 namespace Pingu\Menu\Entities\Actions;
 
-use Pingu\Entity\Support\BaseEntityActions;
+use Pingu\Entity\Support\Actions\BaseEntityActions;
 use Pingu\Taxonomy\Entities\TaxonomyItem;
 
 class MenuActions extends BaseEntityActions

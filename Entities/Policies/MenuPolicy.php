@@ -3,18 +3,13 @@
 namespace Pingu\Menu\Entities\Policies;
 
 use Pingu\Entity\Contracts\BundleContract;
-use Pingu\Entity\Entities\Entity;
-use Pingu\Entity\Support\BaseEntityPolicy;
+use Pingu\Entity\Support\Entity;
+use Pingu\Entity\Support\Policies\BaseEntityPolicy;
 use Pingu\Menu\Entities\Menu;
 use Pingu\User\Entities\User;
 
 class MenuPolicy extends BaseEntityPolicy
 {
-    protected function userOrGuest(?User $user)
-    {
-        return $user ? $user : \Permissions::guestRole();
-    }
-
     public function index(?User $user)
     {
         $user = $this->userOrGuest($user);
