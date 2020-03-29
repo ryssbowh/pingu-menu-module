@@ -35,10 +35,10 @@ class S2019_08_06_175031919749_InstallMenu extends MigratableSeeder
         $menu = Menu::findByMachineName('admin-menu');
         $structure = MenuItem::findByMachineName('admin-menu.structure');
         MenuItem::firstOrCreate(
-            ['name' => 'Menus','url' => 'menu.admin.menus'], [
+            ['name' => 'Menus','url' => 'menu.admin.index'], [
             'weight' => 2,
             'active' => 1,
-            'url' => 'menu.admin.menus',
+            'url' => 'menu.admin.index',
             'deletable' => 0,
             'permission_id' => $perm->id
             ], $menu, $structure

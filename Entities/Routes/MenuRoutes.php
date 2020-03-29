@@ -6,14 +6,19 @@ use Pingu\Entity\Support\Routes\BaseEntityRoutes;
 
 class MenuRoutes extends BaseEntityRoutes
 {
+    protected $inheritsEntityRoutes = false;
+    
+    /**
+     * @inheritDoc
+     */
     protected function routes(): array
     {
         return [
             'admin' => [
-                'editItems', 'patchItems'
+                'index', 'create', 'store', 'edit', 'update', 'patch', 'confirmDelete', 'delete', 'indexRevisions', 'editRevision', 'editItems', 'patchItems'
             ],
             'ajax' => [
-                'patchItems'
+                'index', 'view', 'create', 'store', 'edit', 'update', 'patch', 'delete', 'patchItems'
             ]
         ];
     }
@@ -31,14 +36,6 @@ class MenuRoutes extends BaseEntityRoutes
         return [
             'editItems' => 'get',
             'patchItems' => 'patch'
-        ];
-    }
-
-    protected function names(): array
-    {
-        return [
-            'admin.index' => 'menu.admin.menus',
-            'admin.create' => 'menu.admin.menus.create'
         ];
     }
 }
