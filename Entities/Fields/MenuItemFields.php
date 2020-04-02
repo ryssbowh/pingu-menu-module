@@ -25,7 +25,9 @@ class MenuItemFields extends BaseFieldRepository
                 'menu',
                 [
                     'model' => Menu::class,
-                    'textField' => 'name'
+                    'textField' => 'name', 
+                    'includeNoValue' => false,
+                    'required' => true
                 ]
             ),
             new Model(

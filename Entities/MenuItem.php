@@ -3,7 +3,7 @@
 namespace Pingu\Menu\Entities;
 
 use Illuminate\Support\Str;
-use Pingu\Core\Contracts\Models\HasChildrenContract;
+use Pingu\Core\Contracts\HasChildrenContract;
 use Pingu\Core\Traits\Models\HasChildren;
 use Pingu\Core\Traits\Models\HasMachineName;
 use Pingu\Core\Traits\Models\HasWeight;

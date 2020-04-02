@@ -3,8 +3,8 @@
 namespace Pingu\Menu\Http\Controllers;
 
 use Illuminate\Support\Collection;
-use Pingu\Entity\Support\Entity;
 use Pingu\Entity\Http\Controllers\AdminEntityController;
+use Pingu\Entity\Support\Entity;
 use Pingu\Forms\Support\Form;
 use Pingu\Menu\Entities\Menu;
 use Pingu\Menu\Entities\MenuItem;

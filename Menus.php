@@ -129,6 +129,21 @@ class Menus
     }
 
     /**
+     * Returns all MenuItem for a menu
+     * 
+     * @param Menu|int|string $menu
+     * 
+     * @return Collection
+     */
+    public function menuItems($menu)
+    {
+        $menu = $this->resolveMenu($menu);
+        return $this->resolveItemsCache()
+            ->where('menu_id', $menu->id)
+            ->sortBy('weight');
+    }
+
+    /**
      * Returns all MenuItem that are direct children of $menu and active
      * 
      * @param Menu|int|string $menu
@@ -225,7 +240,8 @@ class Menus
         if (is_null($menu)) {
             return null;
         }
-        if ($menu instanceof Menu) { return $menu;
+        if ($menu instanceof Menu) { 
+            return $menu;
         }
         return $this->menu($menu);
     }
@@ -336,7 +352,7 @@ class Menus
     public function buildForRole(Menu $menu, Role $role): array
     {
         if (config('menu.use-cache')) {
-            $key = config('menu.cache-keys.built').'.'.$role->id;
+            $key = config('menu.cache-keys.built').'.'.$menu->id.'.'.$role->id;
             $_this = $this;
             return \ArrayCache::rememberForever(
                 $key, function () use ($menu, $role, $_this) {
@@ -378,7 +394,7 @@ class Menus
     {
         $menu = $this->resolveMenu($menu);
         $user = \Auth::user();
-        $build = $this->buildForRoles($menu, $user ? $user->roles : \Permissions::guestRole());
+        $build = $this->buildForRoles($menu, $user ? $user->roles : [\Permissions::guestRole()]);
         $currentUri = '/'.request()->path();
         return $this->resolveActiveItems($build, $currentUri);
     }

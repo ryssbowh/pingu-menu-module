@@ -3,18 +3,22 @@
 namespace Pingu\Menu\Entities;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Pingu\Core\Contracts\Models\HasItemsContract;
+use Pingu\Core\Contracts\HasItemsContract;
+use Pingu\Core\Contracts\RenderableContract;
+use Pingu\Core\Contracts\RendererContract;
 use Pingu\Core\Traits\Models\HasMachineName;
+use Pingu\Core\Traits\RendersWithRenderer;
 use Pingu\Entity\Support\Entity;
 use Pingu\Forms\Support\Fields\TextInput;
 use Pingu\Forms\Support\Types\Text;
 use Pingu\Jsgrid\Fields\Text as JsGridText;
 use Pingu\Menu\Entities\Policies\MenuPolicy;
 use Pingu\Menu\Events\MenuCacheChanged;
+use Pingu\Menu\Renderers\MenuRenderer;
 
-class Menu extends Entity implements HasItemsContract
+class Menu extends Entity implements HasItemsContract, RenderableContract
 {
-    use HasMachineName;
+    use HasMachineName, RendersWithRenderer;
 
     protected $dispatchesEvents = [
         'saved' => MenuCacheChanged::class,
@@ -83,5 +87,13 @@ class Menu extends Entity implements HasItemsContract
     public function getRootNextWeight()
     {
         return \Menus::menuRootNextWeight($this);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getRenderer(): RendererContract
+    {
+        return new MenuRenderer($this);
     }
 }
