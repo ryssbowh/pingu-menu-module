@@ -20,7 +20,8 @@ class MenuFields extends BaseFieldRepository
                 'machineName',
                 [
                     'label' => 'Machine Name',
-                    'required' => true
+                    'required' => true,
+                    'dashifyFrom' => 'name'
                 ]
             )
         ];

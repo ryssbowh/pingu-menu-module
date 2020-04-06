@@ -96,4 +96,12 @@ class Menu extends Entity implements HasItemsContract, RenderableContract
     {
         return new MenuRenderer($this);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function systemView(): string
+    {
+        return 'menu@menu';
+    }
 }
