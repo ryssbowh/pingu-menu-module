@@ -38,6 +38,8 @@ class MenuServiceProvider extends ModuleServiceProvider
         $this->loadModuleViewsFrom(__DIR__ . '/../Resources/views', 'menu');
         $this->registerFactories();
         Asset::container('modules')->add('menu-js', 'module-assets/Menu.js');
+        \PinguCaches::register('menu', 'Menu', config('menu.cache-keys'));
+        $this->registerEntities($this->entities);
     }
 
     /**
@@ -50,7 +52,6 @@ class MenuServiceProvider extends ModuleServiceProvider
         $this->app->singleton('menu.menus', Menus::class);
         $this->app->register(RouteServiceProvider::class);
         $this->app->register(EventServiceProvider::class);
-        $this->registerEntities($this->entities);
     }
 
     /**
