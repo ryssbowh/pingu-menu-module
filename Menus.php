@@ -414,7 +414,7 @@ class Menus
                 $array['children'] = $this->resolveActiveItems($array['children'], $uri);
             }
             $array['active'] = false;
-            if ($uri == $array['uri']) {
+            if ($uri == $array['uri'] or \Str::startsWith($uri, $array['uri'])) {
                 $array['active'] = true;
             }
             $array['hasActiveChild'] = false;

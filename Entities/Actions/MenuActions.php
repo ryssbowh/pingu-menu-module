@@ -2,41 +2,28 @@
 
 namespace Pingu\Menu\Entities\Actions;
 
+use Pingu\Core\Support\Actions\BaseAction;
 use Pingu\Entity\Support\Actions\BaseEntityActions;
 use Pingu\Taxonomy\Entities\TaxonomyItem;
 
 class MenuActions extends BaseEntityActions
 {
+    /**
+     * @inheritDoc
+     */
     public function actions(): array
     {
         return [
-            'edit' => [
-                'label' => 'Edit',
-                'url' => function ($entity) {
-                    return $entity::uris()->make('edit', $entity, adminPrefix());
-                },
-                'access' => function ($entity) {
-                    return \Auth::user()->hasPermissionTo('edit menus');
-                }
-            ],
-            'editItems' => [
-                'label' => 'List items',
-                'url' => function ($entity) {
+            'editItems' => new BaseAction(
+                'List items',
+                function ($entity) {
                     return $entity::uris()->make('editItems', $entity, adminPrefix());
                 },
-                'access' => function ($entity) {
-                    return \Auth::user()->hasPermissionTo('view menus');
-                }
-            ],
-            'delete' => [
-                'label' => 'Delete',
-                'url' => function ($entity) {
-                    return $entity::uris()->make('confirmDelete', $entity, adminPrefix());
+                function ($entity) {
+                    return \Gate::check('view', $entity);
                 },
-                'access' => function ($entity) {
-                    return \Auth::user()->hasPermissionTo('delete menus');
-                }
-            ],
+                'admin'
+            )
         ];
     }
 }

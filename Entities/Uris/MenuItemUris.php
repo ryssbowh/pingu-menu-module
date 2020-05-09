@@ -2,10 +2,10 @@
 
 namespace Pingu\Menu\Entities\Uris;
 
-use Pingu\Entity\Support\Uris\BaseEntityUris;
+use Pingu\Core\Support\Uris\BaseModelUris;
 use Pingu\Menu\Entities\Menu;
 
-class MenuItemUris extends BaseEntityUris
+class MenuItemUris extends BaseModelUris
 {
     protected function uris(): array
     {

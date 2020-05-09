@@ -12,8 +12,10 @@ use Pingu\Entity\Support\Entity;
 use Pingu\Forms\Support\Fields\TextInput;
 use Pingu\Forms\Support\Types\Text;
 use Pingu\Jsgrid\Fields\Text as JsGridText;
-use Pingu\Menu\Entities\Policies\MenuPolicy;
 use Pingu\Menu\Events\MenuCacheChanged;
+use Pingu\Menu\Http\Contexts\EditMenuContext;
+use Pingu\Menu\Http\Contexts\StoreMenuContext;
+use Pingu\Menu\Http\Contexts\UpdateMenuContext;
 use Pingu\Menu\Renderers\MenuRenderer;
 
 class Menu extends Entity implements HasItemsContract, RenderableContract
@@ -25,6 +27,8 @@ class Menu extends Entity implements HasItemsContract, RenderableContract
         'deleted' => MenuCacheChanged::class
     ];
 
+    public static $routeContexts = [EditMenuContext::class, UpdateMenuContext::class, StoreMenuContext::class];
+
     protected $fillable = ['name', 'machineName'];
 
     protected $casts = [
@@ -33,20 +37,14 @@ class Menu extends Entity implements HasItemsContract, RenderableContract
 
     public $adminListFields = ['name'];
 
+    public $descriptiveField = 'name';
+
     /**
      * @inheritDoc
      */
     public function getRouteKeyName()
     {
         return 'machineName';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getPolicy(): string
-    {
-        return MenuPolicy::class;
     }
 
     /**

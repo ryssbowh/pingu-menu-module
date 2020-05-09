@@ -30,6 +30,9 @@ class MenuPolicy extends BaseEntityPolicy
 
     public function delete(?User $user, Entity $entity)
     {
+        if (!$entity->deletable) {
+            return false;
+        }
         $user = $this->userOrGuest($user);
         return $user->hasPermissionTo('delete menus');
     }

@@ -7,6 +7,9 @@ use Pingu\Field\Support\FieldRepository\BaseFieldRepository;
 
 class MenuFields extends BaseFieldRepository
 {
+    /**
+     * @inheritDoc
+     */
     protected function fields(): array
     {
         return [
@@ -24,6 +27,29 @@ class MenuFields extends BaseFieldRepository
                     'dashifyFrom' => 'name'
                 ]
             )
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function rules(): array
+    {
+        return [
+            'name' => 'required',
+            'machineName' => 'required|unique:menus,machineName'
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function messages(): array
+    {
+        return [
+            'name.required' => 'Name is required',
+            'machineName.required' => 'Machine Name is required',
+            'machineName.unique' => 'Machine name already exists'
         ];
     }
 }

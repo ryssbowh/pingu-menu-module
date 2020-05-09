@@ -2,15 +2,15 @@
 
 namespace Pingu\Menu\Entities\Uris;
 
-use Pingu\Entity\Support\Uris\BaseEntityUris;
+use Pingu\Core\Support\Uris\BaseModelUris;
 
-class MenuUris extends BaseEntityUris
+class MenuUris extends BaseModelUris
 {
     protected function uris(): array
     {
         return [
-            'editItems' => $this->entity::routeSlug().'/{'.$this->entity::routeSlug().'}/items',
-            'patchItems' => $this->entity::routeSlug().'/{'.$this->entity::routeSlug().'}/items'
+            'editItems' => '@slug@/{@slug@}/items',
+            'patchItems' => '@slug@/{@slug@}/items'
         ];
     }
 }

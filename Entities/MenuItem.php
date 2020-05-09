@@ -9,8 +9,9 @@ use Pingu\Core\Traits\Models\HasMachineName;
 use Pingu\Core\Traits\Models\HasWeight;
 use Pingu\Entity\Support\Entity;
 use Pingu\Menu\Entities\Menu;
-use Pingu\Menu\Entities\Policies\MenuItemPolicy;
 use Pingu\Menu\Events\MenuItemCacheChanged;
+use Pingu\Menu\Http\Contexts\CreateMenuItemContext;
+use Pingu\Menu\Http\Contexts\EditMenuItemContext;
 use Pingu\Permissions\Entities\Permission;
 use Pingu\User\Entities\Role;
 use Route;
@@ -23,6 +24,8 @@ class MenuItem extends Entity implements HasChildrenContract
         'saved' => MenuItemCacheChanged::class,
         'deleted' => MenuItemCacheChanged::class
     ];
+
+    public static $routeContexts = [EditMenuItemContext::class, CreateMenuItemContext::class];
 
     protected $attributes = [
         'url' => '',
@@ -40,7 +43,7 @@ class MenuItem extends Entity implements HasChildrenContract
 
     protected $with = ['children'];
 
-    protected static function boot()
+    public static function boot()
     {
         parent::boot();
 
@@ -51,11 +54,6 @@ class MenuItem extends Entity implements HasChildrenContract
                 }
             }
         );
-    }
-
-    public function getPolicy(): string
-    {
-        return MenuItemPolicy::class;
     }
 
     /**
@@ -117,6 +115,11 @@ class MenuItem extends Entity implements HasChildrenContract
         return false;
     }
 
+    /**
+     * Does this item have an active child
+     * 
+     * @return boolean
+     */
     public function hasActiveChild()
     {
         foreach ($this->children as $child) {

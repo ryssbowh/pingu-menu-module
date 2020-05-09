@@ -15,7 +15,7 @@ class MenuRoutes extends BaseEntityRoutes
     {
         return [
             'admin' => [
-                'index', 'create', 'store', 'edit', 'update', 'patch', 'confirmDelete', 'delete', 'indexRevisions', 'editRevision', 'editItems', 'patchItems'
+                'index', 'create', 'store', 'edit', 'update', 'patch', 'confirmDelete', 'delete', 'editItems', 'patchItems'
             ],
             'ajax' => [
                 'index', 'view', 'create', 'store', 'edit', 'update', 'patch', 'delete', 'patchItems'
